@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F3F8FA; --card: #FFFFFF; --surface: #F6FAFB; --text: #0B1B2B; --text-muted: #5E6E7E; --border: #E2EBEF;
+      --accent: #A6FDFF; --accent-hover: #7CE9EC; --accent-strong: #0A9DA3; --accent-soft: rgba(166, 253, 255, 0.35);
+      --ink: #0B1B2B; --danger: #E5484D; --danger-soft: rgba(229, 72, 77, 0.10); --success: #12A150;
+      --up: #15803D; --up-bg: #EAF8EF; --dn: #B42318; --dn-bg: #FDECEC; --chg: #B45309; --chg-bg: #FFF6E5;
+      --shadow: 0 1px 2px rgba(11, 27, 43, 0.04), 0 8px 24px -12px rgba(11, 27, 43, 0.12);
+      --header-bg: rgba(255, 255, 255, 0.78); --radius: 18px;
+    }
+    [data-theme="dark"] {
+      --bg: #0A121E; --card: #111C2B; --surface: #0E1724; --text: #EAF2F7; --text-muted: #93A4B6; --border: #213046;
+      --accent-strong: #5FE6EA; --accent-soft: rgba(166, 253, 255, 0.10); --ink: #1A2940; --danger-soft: rgba(229, 72, 77, 0.16);
+      --up: #4ADE80; --up-bg: rgba(74, 222, 128, 0.12); --dn: #F87171; --dn-bg: rgba(248, 113, 113, 0.14); --chg: #FBBF24; --chg-bg: rgba(251, 191, 36, 0.12);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5); --header-bg: rgba(17, 28, 43, 0.82);
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; margin: 0; color: var(--text);
+      background: radial-gradient(900px 340px at 50% -140px, var(--accent-soft), transparent 70%), var(--bg); background-attachment: fixed;
+      -webkit-font-smoothing: antialiased; }
+    .container { max-width: 640px; margin: 22px auto; padding: 0 16px 60px; }
+    .header { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      padding: 10px 16px; background: var(--header-bg); -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px);
+      border-bottom: 1px solid var(--border); }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .logo { height: 30px; }
+    .brand-sub { font-size: 12px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+    .controls { display: flex; gap: 6px; align-items: center; }
+    .icon-btn { background: var(--card); border: 1px solid var(--border); padding: 7px 12px; border-radius: 999px; cursor: pointer; color: var(--text);
+      font-weight: 700; font-size: 12px; font-family: inherit; text-decoration: none; white-space: nowrap; }
+    .icon-btn:hover { background: var(--accent); color: #0B1B2B; border-color: var(--accent); }
+
+    .card { background: var(--card); padding: 24px 20px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .hero { text-align: center; }
+    .hero h1 { margin: 10px 0 4px; font-size: 24px; letter-spacing: -0.02em; }
+    .hero p { margin: 0; color: var(--text-muted); font-size: 14px; }
+    .side-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+    .side-btn { padding: 18px 12px; border-radius: 16px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text);
+      font-weight: 800; font-size: 14px; font-family: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .side-btn:hover { background: var(--accent); color: #0B1B2B; border-color: var(--accent-hover); }
+    .side-btn span:first-child { font-size: 26px; }
+
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .side-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: var(--accent-soft);
+      color: var(--accent-strong); font-size: 11px; font-weight: 800; letter-spacing: 0.06em; cursor: pointer; border: none; font-family: inherit; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 4px; margin-bottom: 14px; }
+    .tabs button { border: none; background: transparent; padding: 11px 6px; border-radius: 10px; font-family: inherit; font-weight: 800; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+    .tabs button.on { background: var(--accent); color: #0B1B2B; }
+
+    h2 { margin: 0 0 4px; font-size: 21px; font-weight: 800; letter-spacing: -0.02em; }
+    label { font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 16px; text-transform: uppercase; letter-spacing: 0.06em; }
+    input, select, textarea { width: 100%; padding: 12px 14px; margin-top: 6px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-family: inherit; font-size: 14px; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-strong); background: var(--card); box-shadow: 0 0 0 4px var(--accent-soft); }
+    .main-btn { background: var(--accent); color: #0B1B2B; border: 1px solid var(--accent-hover); font-weight: 800; font-family: inherit; cursor: pointer;
+      margin-top: 22px; font-size: 15px; border-radius: 12px; padding: 14px; width: 100%; }
+    .main-btn:disabled { opacity: 0.6; cursor: wait; }
+    .secondary-btn { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+
+    .inv-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-top: 6px; }
+    .inv-type { padding: 11px 4px; text-align: center; font-size: 12px; font-weight: 700; border-radius: 9px; cursor: pointer; color: var(--text-muted); }
+    .inv-type.active { background: var(--accent); color: #0B1B2B; }
+    .inv-size { display: flex; gap: 10px; margin-top: 6px; }
+    .inv-size button { flex: 1; padding: 13px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; cursor: pointer; font-family: inherit; }
+    .inv-size button.active { background: var(--accent); border-color: var(--accent-hover); color: #0B1B2B; }
+    .inv-table { margin-top: 18px; border-top: 1px solid var(--border); }
+    .inv-sec { display: flex; justify-content: space-between; padding: 16px 4px 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    .inv-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 4px; border-bottom: 1px solid var(--border); }
+    .inv-lbl { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.3; }
+    .inv-hint { font-size: 10px; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
+    .inv-prev { display: inline-block; font-size: 10.5px; font-weight: 700; color: var(--accent-strong); background: var(--accent-soft); padding: 2px 7px; border-radius: 6px; margin-top: 4px; }
+    .inv-step { display: flex; flex-shrink: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .inv-step button { width: 42px; border: none; background: var(--ink); color: #FFF; font-size: 20px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .inv-step input { width: 58px; margin: 0; padding: 10px 0; border: none; border-radius: 0; text-align: center; font-weight: 800; font-size: 16px; background: var(--card); box-shadow: none; }
+    .inv-seg { display: flex; flex-shrink: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .inv-seg button { min-width: 46px; padding: 10px 8px; border: none; border-left: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-weight: 700; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .inv-seg button:first-child { border-left: none; }
+    .inv-seg button.on { background: var(--accent); color: #0B1B2B; }
+    .inv-client { display: none; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: var(--accent-soft); border: 1px solid var(--accent-hover); font-size: 12px; }
+    .inv-client span { color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10px; }
+    .inv-client b { font-size: 14px; }
+    .prev-box { display: none; margin-top: 10px; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--border); background: var(--surface); font-size: 12.5px; line-height: 1.5; }
+    .prev-box a { color: var(--accent-strong); font-weight: 800; }
+    .inv-add { display: flex; gap: 8px; padding: 12px 0 0; }
+    .inv-add input { margin-top: 0; flex: 1; }
+    .inv-add button { padding: 0 16px; border-radius: 12px; border: 1px dashed var(--accent-strong); background: var(--accent-soft); color: var(--text); font-weight: 800; font-family: inherit; cursor: pointer; }
+    .inv-x { border: none; background: var(--danger-soft); color: var(--danger); border-radius: 6px; font-size: 10px; padding: 2px 6px; margin-left: 6px; cursor: pointer; }
+    .ok-box { margin-top: 16px; padding: 16px; border-radius: 14px; background: rgba(18, 161, 80, 0.10); border: 1px solid rgba(18, 161, 80, 0.3); font-size: 13px; line-height: 1.55; }
+    .ok-box b.t { display: block; color: var(--success); font-size: 15px; margin-bottom: 4px; }
+    .ok-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .pill-link { display: inline-block; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 700; font-size: 12px; text-decoration: none; cursor: pointer; font-family: inherit; }
+
+    .sec-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 22px 0 8px 2px; }
+    .cmp-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
+    table.cmp { border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 100%; }
+    table.cmp th, table.cmp td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+    table.cmp th { background: var(--surface); font-size: 11px; font-weight: 800; vertical-align: bottom; }
+    table.cmp th small { display: block; font-weight: 600; color: var(--text-muted); font-size: 10px; margin-top: 2px; }
+    table.cmp th:first-child, table.cmp td:first-child { position: sticky; left: 0; background: var(--card); text-align: left; white-space: normal; min-width: 150px; max-width: 190px; font-weight: 600; border-right: 1px solid var(--border); z-index: 1; }
+    table.cmp th:first-child { background: var(--surface); }
+    table.cmp tr.sec td { background: var(--surface); text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+    table.cmp td.up { color: var(--up); background: var(--up-bg); font-weight: 800; }
+    table.cmp td.dn { color: var(--dn); background: var(--dn-bg); font-weight: 800; }
+    table.cmp td.chg { color: var(--chg); background: var(--chg-bg); font-weight: 800; }
+    table.cmp td small { font-size: 10px; margin-left: 3px; }
+    table.cmp td.na { color: var(--text-muted); }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--text-muted); margin: 8px 2px 0; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+    .hcard { border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: var(--card); margin-bottom: 10px; }
+    .hcard-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+    .hcard-top b { font-size: 14px; }
+    .hcard-id { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: var(--text-muted); }
+    .hstats { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .hstats span { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); }
+    .hchg { margin-top: 8px; font-size: 12px; line-height: 1.5; }
+    .muted { color: var(--text-muted); }
+    .err-box { margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: var(--danger-soft); border: 1px solid rgba(229, 72, 77, 0.35); font-size: 13px; line-height: 1.5; }
+    .err-box b.t { display: block; color: var(--danger); font-size: 15px; margin-bottom: 4px; }
+    .warn-line { margin-top: 6px; font-size: 12px; color: var(--chg); font-weight: 700; }
+    .rep-filters { display: grid; grid-template-columns: 1fr; gap: 0; }
+    .rep-paper { margin-top: 18px; background: #FFFFFF; color: #0B1B2B; border-radius: 14px; border: 1px solid var(--border); padding: 18px 14px; overflow: hidden; }
+    .rep-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .rep-actions .pill-link { flex: 1; text-align: center; padding: 11px 10px; }
+    #err-toast { display: none; position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 3000; background: #B42318; color: #fff; padding: 12px 14px;
+      border-radius: 12px; font: 600 12px/1.45 system-ui, sans-serif; max-height: 40vh; overflow: auto; }
+    @media (max-width: 420px) { .brand-sub { display: none; } .card { padding: 20px 16px; } }
+
+    @media screen { #inv-print { display: none; } }
+    @media print {
+      @page { margin: 10mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: #fff !important; }
+      .header, .container, #err-toast { display: none !important; }
+      #inv-print { display: block !important; }
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <div class="header">
+    <div class="brand">
+      <img src="https://i.postimg.cc/TY4rPG9j/bnblogo.png" class="logo" alt="Clean My BnB">
+      <span class="brand-sub" data-t="appTitle">Inventories</span>
+    </div>
+    <div class="controls">
+      <a class="icon-btn" id="lnk-hub" target="_top" style="display:none;" onclick="irAlHub(this)">← Hub</a>
+      <button class="icon-btn" onclick="toggleLang()" id="btn-lang">🌐 EN</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="btn-theme">🌙</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ===== Elegir zona ===== -->
+    <div id="view-side" class="card hero" style="display:none;">
+      <img src="https://i.postimg.cc/TY4rPG9j/bnblogo.png" alt="" style="height:64px;">
+      <h1 data-t="appTitle">Inventories</h1>
+      <p data-t="chooseSide">Choose your area to continue</p>
+      <div class="side-selector">
+        <button class="side-btn" onclick="setSide('west')"><span>🌇</span><span>WEST SIDE</span></button>
+        <button class="side-btn" onclick="setSide('east')"><span>🌆</span><span>EAST SIDE</span></button>
+      </div>
+    </div>
+
+    <!-- ===== App ===== -->
+    <div id="view-main" style="display:none;">
+      <div class="topbar">
+        <h2 data-t="appTitle">Inventories</h2>
+        <button class="side-chip" id="side-chip" onclick="changeSide()"></button>
+      </div>
+      <div class="tabs">
+        <button id="tab-form" class="on" onclick="showPane('form')">📝 <span data-t="tabNew">New inventory</span></button>
+        <button id="tab-hist" onclick="showPane('hist')">📊 <span data-t="tabHist">History</span></button>
+        <button id="tab-rep" onclick="showPane('rep')">📈 <span data-t="tabRep">Reports</span></button>
+      </div>
+
+      <!-- Nuevo inventario -->
+      <div id="pane-form" class="card">
+        <div style="display:flex; justify-content:flex-end; margin:-8px 0 12px;">
+          <button type="button" class="pill-link" onclick="invNew()">🔄 <span data-t="newInv">New inventory</span></button>
+        </div>
+        <div class="inv-types">
+          <div class="inv-type active" id="invtab-supplies" onclick="invSetType('supplies')">🧴 <span data-t="tSupplies">Supplies</span></div>
+          <div class="inv-type" id="invtab-linen" onclick="invSetType('linen')">🛏️ <span data-t="tLinen">Linen</span></div>
+          <div class="inv-type" id="invtab-cutlery" onclick="invSetType('cutlery')">🍴 <span data-t="tCutlery">Kitchen</span></div>
+        </div>
+
+        <label data-t="date">Date</label>
+        <input type="date" id="invf-date" onchange="invLoadPrev()">
+
+        <label data-t="name">Cleaner Name</label>
+        <select id="invf-name"></select>
+
+        <label data-t="building">Building</label>
+        <select id="invf-building" onchange="invBuildingChanged()"></select>
+
+        <div id="invf-unit-wrap" style="display:none;">
+          <label data-t="unit">Unit</label>
+          <select id="invf-unit" onchange="invUnitChanged()"></select>
+        </div>
+
+        <div id="invf-other-wrap" style="display:none;">
+          <label data-t="newBuilding">New building</label>
+          <input type="text" id="invf-newb" placeholder="e.g. 50 York">
+          <label data-t="unit">Unit</label>
+          <input type="text" id="invf-newu" placeholder="e.g. 1204">
+          <label data-t="client">Client</label>
+          <select id="invf-newc"></select>
+        </div>
+
+        <div id="invf-client-chip" class="inv-client"></div>
+        <div id="invf-prev" class="prev-box"></div>
+
+        <div id="invf-size-wrap" style="display:none;">
+          <label data-t="size">Bed Size</label>
+          <div class="inv-size">
+            <button type="button" id="invsize-Queen" onclick="invSetSize('Queen')">QUEEN</button>
+            <button type="button" id="invsize-King" onclick="invSetSize('King')">KING</button>
+          </div>
+        </div>
+
+        <div id="invf-items" class="inv-table"></div>
+
+        <label data-t="notes">Notes</label>
+        <textarea id="invf-notes" rows="3"></textarea>
+
+        <label data-t="photos">Photos</label>
+        <input type="file" id="invf-fotos" accept="image/*" multiple>
+        <div class="inv-hint" data-t="photosHint"></div>
+
+        <button class="main-btn" id="invx-submit-btn" onclick="invSubmit()">💾 <span id="invx-submit" data-t="submit">Save Inventory</span></button>
+        <button class="main-btn secondary-btn" onclick="invPrint()" style="margin-top: 10px;">🖨️ <span data-t="print">Download PDF</span></button>
+        <div id="invf-result"></div>
+      </div>
+
+      <!-- Historial y comparación -->
+      <div id="pane-hist" class="card" style="display:none;">
+        <label style="margin-top:0;" data-t="building">Building</label>
+        <select id="h-building" onchange="hBuildingChanged()"></select>
+        <label data-t="unit">Unit</label>
+        <select id="h-unit"></select>
+        <label data-t="type">Type</label>
+        <div class="inv-types">
+          <div class="inv-type active" id="htab-supplies" onclick="hSetType('supplies')">🧴 <span data-t="tSupplies">Supplies</span></div>
+          <div class="inv-type" id="htab-linen" onclick="hSetType('linen')">🛏️ <span data-t="tLinen">Linen</span></div>
+          <div class="inv-type" id="htab-cutlery" onclick="hSetType('cutlery')">🍴 <span data-t="tCutlery">Kitchen</span></div>
+        </div>
+        <label data-t="histPass">Admin password</label>
+        <input type="password" id="h-pass" onkeydown="if(event.key === 'Enter') hLoad()">
+        <button class="main-btn" id="h-btn" onclick="hLoad()" data-t="histLoad">View history</button>
+        <div id="h-result"></div>
+      </div>
+
+      <!-- Reportes -->
+      <div id="pane-rep" class="card" style="display:none;">
+        <h2 style="font-size:18px;" data-t="repTitle">Reports</h2>
+        <div class="inv-hint" style="font-size:12px;" data-t="repIntro"></div>
+        <label data-t="type">Type</label>
+        <div class="inv-types">
+          <div class="inv-type active" id="rtab-linen" onclick="repSetType('linen')">🛏️ <span data-t="tLinen">Linen</span></div>
+          <div class="inv-type" id="rtab-supplies" onclick="repSetType('supplies')">🧴 <span data-t="tSupplies">Supplies</span></div>
+          <div class="inv-type" id="rtab-cutlery" onclick="repSetType('cutlery')">🍴 <span data-t="tCutlery">Kitchen</span></div>
+        </div>
+        <label data-t="repClient">Client or group</label>
+        <select id="r-filtro"></select>
+        <label data-t="repSide">Area</label>
+        <select id="r-side">
+          <option value="" data-t="repBoth">Both (West + East)</option>
+          <option value="WEST">WEST</option>
+          <option value="EAST">EAST</option>
+        </select>
+        <label data-t="histPass">Admin password</label>
+        <input type="password" id="r-pass" onkeydown="if(event.key === 'Enter') repLoad()">
+        <button class="main-btn" id="r-btn" onclick="repLoad()" data-t="repGen">Generate report</button>
+        <div id="r-actions" class="rep-actions" style="display:none;">
+          <button class="pill-link" type="button" id="r-save" onclick="repExport()">💾 <span data-t="repSave">Save to Drive + Sheets</span></button>
+          <button class="pill-link" type="button" onclick="repPrint()">🖨️ <span data-t="print">Download PDF</span></button>
+        </div>
+        <button class="main-btn" id="r-client" type="button" onclick="repClientPdf()" style="display:none; margin-top:10px; background:var(--ink); color:#fff; border-color:var(--ink);">📄 <span data-t="repClientPdf">Client PDF (by building)</span></button>
+        <div class="inv-hint" id="r-client-hint" style="display:none;" data-t="repClientHint"></div>
+        <div id="r-msg"></div>
+        <div id="r-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="inv-print"></div>
+  <div id="err-toast" onclick="this.style.display='none'"></div>
+
+  <script>
+    var BOOT = <?!= boot ?>;
+    var lang = BOOT.lang || 'en';
+    var currentSide = BOOT.side || '';
+    var staffData = {};
+    var LISTS_KEY = 'cmb_inv_lists_v1';
+
+    var APP_ERRORS = [];
+    function showErr(msg) {
+      var text = String(msg && msg.message ? msg.message : msg);
+      if (APP_ERRORS.indexOf(text) === -1) APP_ERRORS.push(text);
+      var t = document.getElementById('err-toast');
+      t.innerHTML = '';
+      APP_ERRORS.forEach(function (m) { var d = document.createElement('div'); d.textContent = '⚠ ' + m; t.appendChild(d); });
+      t.style.display = 'block';
+    }
+    window.addEventListener('error', function (e) { showErr((e.message || 'Error') + (e.lineno ? ' (line ' + e.lineno + ')' : '')); });
+
+    // ==========================================
+    // TEXTOS (EN / ES)
+    // ==========================================
+    var INV_TXT = {
+      es: {
+        appTitle: 'Inventarios', chooseSide: 'Elige tu zona para continuar', area: 'ZONA',
+        tabNew: 'Nuevo', tabHist: 'Historial', tabRep: 'Reportes',
+        repTitle: 'Reportes de inventario', repIntro: 'Último conteo de cada unidad (Ropa de cama, Supplies o Cocina): totales generales, por cliente y por unidad, y qué unidades no tienen inventario.',
+        repClient: 'Cliente o grupo', repSide: 'Zona', repBoth: 'Ambas (West + East)', repGen: 'Generar reporte', repSave: 'Guardar en Drive + Sheets',
+        repAll: 'Todos los clientes', repGroups: 'Grupos', repClients: 'Clientes', repGroupWord: 'Grupo',
+        repClientPdf: 'PDF para el cliente (por edificio)', repClientHint: 'En inglés y sin datos internos: lo que tiene cada unidad, agrupado por edificio. Listo para enviar (ej. a Return Policy para que pidan más ropa de cama).',
+        repClientSaved: 'PDF para el cliente listo', openFolder2: 'Ver carpeta',
+        repSaving: 'Guardando...', repSaved: 'Reporte guardado', repSheet: 'Abrir pestaña', repNoData: 'No hay unidades para este filtro.',
+        saveFail: 'No se pudo guardar', saveFailHint: 'Tus datos siguen en pantalla. Intenta de nuevo; si vuelve a fallar, toma captura de este mensaje.', retry: 'Reintentar',
+        warnSaved: 'El inventario quedó registrado, pero:',
+        tSupplies: 'Supplies', tLinen: 'Ropa de cama', tCutlery: 'Cocina', type: 'Tipo',
+        lockersGroup: 'Lockers / Storage', unitsGroup: 'Unidades', lockerWord: 'Locker',
+        customTitle: 'Artículos adicionales', customPh: 'Artículo extra (ej. ganchos, plancha)', customAdd: 'Agregar', customHint: '¿Hay algo que no está en la lista? Agrégalo aquí.',
+        date: 'Fecha', name: 'Nombre Cleaner', building: 'Edificio', unit: 'Unidad', newBuilding: 'Edificio nuevo', client: 'Cliente',
+        pickBuilding: 'Selecciona el edificio...', pickUnit: 'Selecciona la unidad...', pickClient: 'Selecciona el cliente...', select: 'Selecciona...',
+        otherUnit: 'Otra (no está en la lista)', clientLbl: 'Cliente',
+        size: 'Tamaño de cama', notes: 'Notas (faltantes, daños, manchas)', notesPh: 'ej. Falta 1 toalla de baño, sábana manchada...',
+        photos: 'Fotos (opcional, máx. 6)', photosHint: 'Daños, manchas o faltantes. Se guardan en Drive junto al PDF del inventario.',
+        submit: 'Guardar inventario', print: 'Descargar PDF', saving: 'Guardando...', uploading: 'Preparando fotos...',
+        newInv: 'Nuevo inventario', confirmNew: 'Hay conteos sin guardar. ¿Borrarlos y empezar un inventario nuevo?', savedTitle: 'Inventario guardado', savedId: 'Registro', changes: 'Cambios vs anterior', openPdf: 'Abrir PDF', openFolder: 'Carpeta en Drive', photosWord: 'foto(s)',
+        missing: 'Completa fecha, nombre, edificio y unidad.', missingSize: 'Selecciona el tamaño de cama (Queen o King).',
+        yes: 'Sí', no: 'No', na: 'N/A',
+        partial: 'Usa decimales: 0.25 = un cuarto, 0.5 = medio, 0.2 = casi vacío',
+        col: { qty: 'Cantidad', order: '¿Pedir más?', status: 'Estado' },
+        prevLoading: 'Buscando el inventario anterior...', prevTitle: 'Inventario anterior', prevNone: 'Es el primer inventario de este tipo para esta unidad.',
+        prevBy: 'por', prevWord: 'Antes', prevHint: 'Junto a cada artículo verás lo que había la vez pasada.', viewPdf: 'Ver PDF',
+        histPass: 'Contraseña admin', histLoad: 'Ver historial', histCompare: 'Comparación lado a lado (lo más reciente a la izquierda)',
+        histList: 'Inventarios guardados', noHistory: 'Esta unidad aún no tiene inventarios de este tipo.', histItem: 'Artículo', loading: 'Cargando...', denied: 'Acceso denegado.',
+        lgUp: 'Subió vs el anterior', lgDn: 'Bajó vs el anterior', lgChg: 'Cambió',
+        pieces: 'piezas', zero: 'en cero', toOrder: 'por pedir', checkNo: 'checklist en NO', photo: 'Foto'
+      },
+      en: {
+        appTitle: 'Inventories', chooseSide: 'Choose your area to continue', area: 'AREA',
+        tabNew: 'New', tabHist: 'History', tabRep: 'Reports',
+        repTitle: 'Inventory reports', repIntro: 'Latest count of every unit (Bed linen, Supplies or Kitchen): overall totals, by client and by unit, plus units with no inventory yet.',
+        repClient: 'Client or group', repSide: 'Area', repBoth: 'Both (West + East)', repGen: 'Generate report', repSave: 'Save to Drive + Sheets',
+        repAll: 'All clients', repGroups: 'Groups', repClients: 'Clients', repGroupWord: 'Group',
+        repClientPdf: 'Client PDF (by building)', repClientHint: 'In English, no internal data: what each unit has, grouped by building. Ready to send (e.g. to Return Policy so they can order more bed linen).',
+        repClientSaved: 'Client PDF ready', openFolder2: 'Open folder',
+        repSaving: 'Saving...', repSaved: 'Report saved', repSheet: 'Open tab', repNoData: 'No units for this filter.',
+        saveFail: 'Could not save', saveFailHint: 'Your data is still on screen. Try again; if it fails again, take a screenshot of this message.', retry: 'Try again',
+        warnSaved: 'The inventory was recorded, but:',
+        tSupplies: 'Supplies', tLinen: 'Bed linen', tCutlery: 'Kitchen', type: 'Type',
+        lockersGroup: 'Lockers / Storage', unitsGroup: 'Units', lockerWord: 'Locker',
+        customTitle: 'Additional items', customPh: 'Extra item (e.g. hangers, iron)', customAdd: 'Add', customHint: 'Something not on the list? Add it here.',
+        date: 'Date', name: 'Cleaner Name', building: 'Building', unit: 'Unit', newBuilding: 'New building', client: 'Client',
+        pickBuilding: 'Select building...', pickUnit: 'Select unit...', pickClient: 'Select client...', select: 'Select...',
+        otherUnit: 'Other (not on the list)', clientLbl: 'Client',
+        size: 'Bed Size', notes: 'Notes (missing, damaged, stained)', notesPh: 'e.g. 1 bath towel missing, stained sheet...',
+        photos: 'Photos (optional, max 6)', photosHint: 'Damage, stains or missing items. Saved in Drive next to the inventory PDF.',
+        submit: 'Save Inventory', print: 'Download PDF', saving: 'Saving...', uploading: 'Preparing photos...',
+        newInv: 'New inventory', confirmNew: 'There are unsaved counts. Clear them and start a new inventory?', savedTitle: 'Inventory saved', savedId: 'Record', changes: 'Changes vs previous', openPdf: 'Open PDF', openFolder: 'Drive folder', photosWord: 'photo(s)',
+        missing: 'Please fill in date, name, building and unit.', missingSize: 'Please select the bed size (Queen or King).',
+        yes: 'Yes', no: 'No', na: 'N/A',
+        partial: 'Use decimals: 0.25 = quarter, 0.5 = half, 0.2 = almost empty',
+        col: { qty: 'Count', order: 'Order More?', status: 'Status' },
+        prevLoading: 'Looking for the previous inventory...', prevTitle: 'Previous inventory', prevNone: 'This is the first inventory of this type for this unit.',
+        prevBy: 'by', prevWord: 'Before', prevHint: 'Next to each item you will see what was there last time.', viewPdf: 'View PDF',
+        histPass: 'Admin password', histLoad: 'View history', histCompare: 'Side-by-side comparison (most recent on the left)',
+        histList: 'Saved inventories', noHistory: 'No inventories of this type for this unit yet.', histItem: 'Item', loading: 'Loading...', denied: 'Access denied.',
+        lgUp: 'Up vs previous', lgDn: 'Down vs previous', lgChg: 'Changed',
+        pieces: 'pieces', zero: 'at zero', toOrder: 'to order', checkNo: 'checklist NO', photo: 'Photo'
+      }
+    };
+
+    // kind: count = contador | yn = Sí/No | ynna = Sí/No/N/A ; step = cuánto suma cada + / -
+    // El texto "en" de cada artículo es su nombre en Sheets (no lo cambies o se rompe la comparación)
+    var INV_DEF = {
+      supplies: [
+        { es: 'Consumibles para huéspedes', en: 'Guest Consumables', col: 'qty', kind: 'count', items: [
+          { id: 'tp',  es: 'Papel higiénico (rollos)',  en: 'Toilet Paper (rolls)',      step: 1 },
+          { id: 'pt',  es: 'Papel de cocina (rollos)',  en: 'Paper Towel (rolls)',       step: 1 },
+          { id: 'bw',  es: 'Gel de baño (botella)',     en: 'Body Wash (bottle)',        step: 0.25 },
+          { id: 'sh',  es: 'Shampoo (botella)',         en: 'Shampoo (bottle)',          step: 0.25 },
+          { id: 'co',  es: 'Acondicionador (botella)',  en: 'Conditioner (bottle)',      step: 0.25 },
+          { id: 'hs',  es: 'Jabón de manos (repuesto)', en: 'Hand Soap (refill bottle)', step: 0.25 },
+          { id: 'gbk', es: 'Bolsas de basura (cocina)', en: 'Garbage Bags (kitchen)',    step: 1 },
+          { id: 'gbw', es: 'Bolsas de basura (baño)',   en: 'Garbage Bags (washroom)',   step: 1 }
+        ]},
+        { es: 'Cocina y lavandería', en: 'Kitchen & Laundry', col: 'order', kind: 'yn', items: [
+          { id: 'dsl', es: 'Jabón de trastes (líquido)',              en: 'Dish Soap (liquid)' },
+          { id: 'dst', es: 'Jabón de trastes (pastillas)',            en: 'Dish Soap (tablets)' },
+          { id: 'cof', es: 'Café',                                    en: 'Coffee' },
+          { id: 'cff', es: 'Filtros de café',                         en: 'Coffee Filters' },
+          { id: 'ldt', es: 'Detergente de ropa (líquido o cápsulas)', en: 'Laundry Detergent (container or pods)' },
+          { id: 'blc', es: 'Cloro o quitamanchas',                    en: 'Bleach or Stain Remover' }
+        ]},
+        { es: 'Productos de limpieza', en: 'Cleaning Supplies', col: 'order', kind: 'yn', items: [
+          { id: 'apc', es: 'Limpiador multiusos',    en: 'All Purpose Cleaner' },
+          { id: 'glc', es: 'Limpiavidrios',          en: 'Glass Cleaner' },
+          { id: 'flc', es: 'Limpiador de pisos',     en: 'Floor Cleaner' },
+          { id: 'feb', es: 'Febreze o aromatizante', en: 'Febreze or Deodorizer Spray' }
+        ]},
+        { es: 'Mantenimiento / Extras', en: 'Maintenance / Extras', col: 'qty', kind: 'count', items: [
+          { id: 'bulb', es: 'Focos',             en: 'Light Bulbs' },
+          { id: 'aa',   es: 'Baterías (AA)',     en: 'Batteries (AA)' },
+          { id: 'aaa',  es: 'Baterías (AAA)',    en: 'Batteries (AAA)' },
+          { id: 'fobb', es: 'Baterías para FOB', en: 'Fob Batteries' }
+        ]},
+        { es: 'Checklist de salida', en: 'Exit Checklist', col: 'status', kind: 'ynna', items: [
+          { id: 'keys',  es: '¿Llaves completas?',                   en: 'Keys accounted for?' },
+          { id: 'fob',   es: '¿FOB completo?',                       en: 'FOB accounted for?' },
+          { id: 'park',  es: '¿Control / pase de estacionamiento?',  en: 'Parking remote or pass accounted for?' },
+          { id: 'lamps', es: '¿Lámparas de piso y buró conectadas?', en: 'Floor & nightstand lamps plugged in?', kind: 'yn' },
+          { id: 'tv',    es: '¿TV / smart TV box conectados?',       en: 'TV / smart TV box plugged in?', kind: 'yn' }
+        ]}
+      ],
+      linen: [
+        { es: 'Ropa de cama', en: 'Bedding', col: 'qty', kind: 'count', items: [
+          { id: 'flat',   es: 'Sábanas planas',     en: 'Flat Sheets' },
+          { id: 'fitted', es: 'Sábanas ajustables', en: 'Fitted Sheets' },
+          { id: 'pcase',  es: 'Fundas de almohada', en: 'Pillowcases' },
+          { id: 'pillow', es: 'Almohadas',          en: 'Pillows' },
+          { id: 'dcover', es: 'Fundas de edredón',  en: 'Duvet Covers' },
+          { id: 'duvet',  es: 'Edredones',          en: 'Duvets / Comforters' }
+        ]},
+        { es: 'Toallas', en: 'Towels', col: 'qty', kind: 'count', items: [
+          { id: 'bath', es: 'Toallas de baño',            en: 'Bath Towels' },
+          { id: 'hand', es: 'Toallas de manos',           en: 'Hand Towels' },
+          { id: 'face', es: 'Toallas grises para rostro', en: 'Grey Face Towels' },
+          { id: 'mat',  es: 'Tapetes de baño',            en: 'Bath Mats' }
+        ]}
+      ],
+      cutlery: [
+        { es: 'Cubiertos', en: 'Cutlery', col: 'qty', kind: 'count', items: [
+          { id: 'fork',   es: 'Tenedores',            en: 'Dinner Forks' },
+          { id: 'sfork',  es: 'Tenedores de postre',  en: 'Salad / Dessert Forks' },
+          { id: 'knife',  es: 'Cuchillos de mesa',    en: 'Dinner Knives' },
+          { id: 'steak',  es: 'Cuchillos para carne', en: 'Steak Knives' },
+          { id: 'spoon',  es: 'Cucharas soperas',     en: 'Tablespoons / Soup Spoons' },
+          { id: 'tspoon', es: 'Cucharitas',           en: 'Teaspoons' }
+        ]},
+        { es: 'Vajilla y cristalería', en: 'Dishes & Glassware', col: 'qty', kind: 'count', items: [
+          { id: 'dplate', es: 'Platos grandes',  en: 'Dinner Plates' },
+          { id: 'splate', es: 'Platos pequeños', en: 'Side Plates' },
+          { id: 'bowl',   es: 'Tazones / bowls', en: 'Bowls' },
+          { id: 'mug',    es: 'Tazas',           en: 'Mugs' },
+          { id: 'glass',  es: 'Vasos',           en: 'Drinking Glasses' },
+          { id: 'wine',   es: 'Copas de vino',   en: 'Wine Glasses' }
+        ]}
+      ]
+    };
+
+    // Traducción de nombres guardados (en inglés) para la tabla comparativa
+    var INV_NAMES = { 'Additional items': { es: 'Artículos adicionales', en: 'Additional items' } };
+    Object.keys(INV_DEF).forEach(function (t) {
+      INV_DEF[t].forEach(function (sec) {
+        INV_NAMES[sec.en] = { es: sec.es, en: sec.en };
+        sec.items.forEach(function (it) { INV_NAMES[it.en] = { es: it.es, en: it.en }; });
+      });
+    });
+    function nameOf(k) { return INV_NAMES[k] ? INV_NAMES[k][invL()] : k; }
+
+    var INV_LOGO = 'https://i.postimg.cc/TY4rPG9j/bnblogo.png';
+    var invType = 'supplies', invSize = '';
+    var invValues = { supplies: {}, linen: {}, cutlery: {} };
+    var invCustom = { supplies: [], linen: [], cutlery: [] };
+    var invPrev = null, invPrevSeq = 0, invPrevKey = '';
+    var invReady = false;
+    var hType = 'supplies';
+
+    function invL() { return lang === 'es' ? 'es' : 'en'; }
+    function invT() { return INV_TXT[invL()]; }
+    function invEsc(s) { var d = document.createElement('div'); d.textContent = (s === undefined || s === null) ? '' : String(s); return d.innerHTML; }
+    function invNum(v) {
+      var n = parseFloat(String(v === undefined || v === null ? '' : v).split(',').join('.'));
+      if (isNaN(n) || n < 0) n = 0;
+      return Math.round(n * 100) / 100;
+    }
+    function todayStr() {
+      var d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function fmtVal(v, kind) {
+      var T = invT();
+      if (v === undefined || v === null || v === '') return '-';
+      if (kind === 'count') return String(invNum(v));
+      return ({ 'YES': T.yes, 'NO': T.no, 'N/A': T.na })[v] || String(v);
+    }
+
+    // ==========================================
+    // ARRANQUE, ZONA, IDIOMA, TEMA
+    // ==========================================
+    function applyLang() {
+      var T = invT();
+      document.documentElement.lang = lang;
+      document.getElementById('btn-lang').innerText = '🌐 ' + lang.toUpperCase();
+      document.querySelectorAll('[data-t]').forEach(function (el) { el.textContent = T[el.getAttribute('data-t')] || ''; });
+      repFillFiltro();
+      document.getElementById('invf-notes').placeholder = T.notesPh;
+      document.getElementById('side-chip').innerText = '📍 ' + T.area + ': ' + String(currentSide).toUpperCase() + ' ⇄';
+      fillNames();
+      invFillBuildings();
+      hFillBuildings();
+      invRenderPrevBox();
+      invRender();
+    }
+    function irAlHub(a) { a.href = BOOT.hub + '?side=' + currentSide + '&lang=' + lang; }
+    function toggleLang() { lang = lang === 'en' ? 'es' : 'en'; applyLang(); }
+    function toggleTheme() {
+      var dark = document.body.getAttribute('data-theme') === 'dark';
+      document.body.setAttribute('data-theme', dark ? 'light' : 'dark');
+      document.getElementById('btn-theme').innerText = dark ? '🌙' : '☀️';
+    }
+
+    function setSide(s) {
+      currentSide = s;
+      _uIdx = null;
+      document.getElementById('view-side').style.display = 'none';
+      document.getElementById('view-main').style.display = 'block';
+      invInit();
+      applyLang();
+      invLoadPrev();
+    }
+    function changeSide() {
+      document.getElementById('view-main').style.display = 'none';
+      document.getElementById('view-side').style.display = 'block';
+    }
+    function showPane(p) {
+      document.getElementById('pane-form').style.display = p === 'form' ? 'block' : 'none';
+      document.getElementById('pane-hist').style.display = p === 'hist' ? 'block' : 'none';
+      document.getElementById('pane-rep').style.display = p === 'rep' ? 'block' : 'none';
+      document.getElementById('tab-form').classList.toggle('on', p === 'form');
+      document.getElementById('tab-hist').classList.toggle('on', p === 'hist');
+      document.getElementById('tab-rep').classList.toggle('on', p === 'rep');
+      if (p === 'hist' || p === 'rep') {
+        try {
+          var sp = sessionStorage.getItem('inv_adm_pass');
+          if (sp && !document.getElementById('h-pass').value) document.getElementById('h-pass').value = sp;
+          if (sp && !document.getElementById('r-pass').value) document.getElementById('r-pass').value = sp;
+        } catch (e) {}
+      }
+      if (p === 'hist') hFillBuildings();
+      if (p === 'rep') repFillFiltro();
+    }
+
+    // Listas: se muestran al instante desde la copia del teléfono y se actualizan en segundo plano
+    function applyLists(d) {
+      if (!d || typeof d !== 'object') return;
+      if (d.error) showErr(d.error);
+      staffData = d;
+      _uIdx = null;
+      if (currentSide) { fillNames(); invFillBuildings(); hFillBuildings(); repFillFiltro(); }
+    }
+    function loadLists(force) {
+      google.script.run
+        .withSuccessHandler(function (d) { applyLists(d); try { localStorage.setItem(LISTS_KEY, JSON.stringify(d)); } catch (e) {} })
+        .withFailureHandler(showErr)
+        .getInvLists(!!force);
+    }
+    function fillNames() {
+      var sel = document.getElementById('invf-name');
+      var list = staffData[currentSide] || [];
+      var prev = sel.value;
+      sel.innerHTML = '<option value="" disabled selected>' + invEsc(invT().select) + '</option>' +
+        list.map(function (n) { return '<option value="' + invEsc(n) + '">' + invEsc(n) + '</option>'; }).join('');
+      if (prev && list.indexOf(prev) !== -1) sel.value = prev;
+    }
+
+    // ==========================================
+    // UNIDADES: Building + Unit -> Cliente
+    // ==========================================
+    var UNIT_OTHER = '__other__';
+    var _uIdx = null, _uIdxKey = '';
+    function unitNorm(s) { return String(s === undefined || s === null ? '' : s).split(' ').filter(String).join(' '); }
+    function unitIsLocker(u) { return String(u).toUpperCase().indexOf('STORAGE') === 0; }
+    function unitSort(a, b) { return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }); }
+    function unitIndex() {
+      var all = staffData.unidades || [];
+      var sd = String(currentSide || '').toUpperCase();
+      var key = sd + '|' + all.length + '|' + (staffData.ts || '');
+      if (_uIdx && _uIdxKey === key) return _uIdx;
+      var idx = { list: [], buildings: [], byB: {}, client: {} };
+      all.forEach(function (r) {
+        if (sd && r[3] && r[3] !== sd) return;
+        idx.list.push(r);
+        var kb = r[0].toUpperCase();
+        if (!idx.byB[kb]) { idx.byB[kb] = { name: r[0], lockers: [], units: [] }; idx.buildings.push(r[0]); }
+        if (unitIsLocker(r[1])) idx.byB[kb].lockers.push(r[1]); else idx.byB[kb].units.push(r[1]);
+        idx.client[kb + '|' + r[1].toUpperCase()] = r[2];
+      });
+      idx.buildings.sort(unitSort);
+      Object.keys(idx.byB).forEach(function (k) { idx.byB[k].lockers.sort(unitSort); idx.byB[k].units.sort(unitSort); });
+      _uIdx = idx; _uIdxKey = key;
+      return idx;
+    }
+    function unitClientOf(b, u) { return unitIndex().client[String(b).toUpperCase() + '|' + String(u).toUpperCase()] || ''; }
+    function unitOptions(values, placeholder, current) {
+      var h = '<option value="" disabled' + (current ? '' : ' selected') + '>' + invEsc(placeholder) + '</option>';
+      values.forEach(function (v) { h += '<option value="' + invEsc(v) + '"' + (v === current ? ' selected' : '') + '>' + invEsc(v) + '</option>'; });
+      return h;
+    }
+    function unitUnitOptions(building, placeholder, current) {
+      var T = invT();
+      var g = unitIndex().byB[String(building).toUpperCase()];
+      var h = '<option value="" disabled' + (current ? '' : ' selected') + '>' + invEsc(placeholder) + '</option>';
+      if (!g) return h;
+      function opt(v, label) { return '<option value="' + invEsc(v) + '"' + (v === current ? ' selected' : '') + '>' + invEsc(label) + '</option>'; }
+      if (g.lockers.length) {
+        h += '<optgroup label="' + invEsc(T.lockersGroup) + '">';
+        g.lockers.forEach(function (u) { h += opt(u, '🔒 ' + T.lockerWord + ' - ' + (unitClientOf(building, u) || u)); });
+        h += '</optgroup><optgroup label="' + invEsc(T.unitsGroup) + '">';
+      }
+      g.units.forEach(function (u) { h += opt(u, u); });
+      if (g.lockers.length) h += '</optgroup>';
+      return h;
+    }
+    function unitAllClients() {
+      var seen = {}, out = [];
+      (staffData.clientes || []).concat(unitIndex().list.map(function (r) { return r[2]; })).forEach(function (c) {
+        c = unitNorm(c);
+        if (c && !seen[c.toUpperCase()]) { seen[c.toUpperCase()] = true; out.push(c); }
+      });
+      return out.sort(unitSort);
+    }
+
+    // ==========================================
+    // FORMULARIO DE INVENTARIO
+    // ==========================================
+    function invInit() {
+      if (!invReady) { invBindEvents(); invReady = true; }
+      var dateEl = document.getElementById('invf-date');
+      if (!dateEl.value) dateEl.value = todayStr();
+    }
+
+    function invSetType(t) {
+      invType = t;
+      ['supplies', 'linen', 'cutlery'].forEach(function (k) { document.getElementById('invtab-' + k).classList.toggle('active', k === t); });
+      document.getElementById('invf-size-wrap').style.display = (t === 'linen') ? 'block' : 'none';
+      document.getElementById('invf-result').innerHTML = '';
+      invLoadPrev();
+    }
+
+    function invSetSize(s) {
+      invSize = s;
+      document.getElementById('invsize-Queen').classList.toggle('active', s === 'Queen');
+      document.getElementById('invsize-King').classList.toggle('active', s === 'King');
+      invLoadPrev();
+    }
+
+    function invFillBuildings() {
+      var sel = document.getElementById('invf-building');
+      var T = invT(), cur = sel.value;
+      var list = unitIndex().buildings;
+      if (cur && cur !== UNIT_OTHER && list.indexOf(cur) === -1) cur = '';
+      sel.innerHTML = unitOptions(list, T.pickBuilding, cur) +
+        '<option value="' + UNIT_OTHER + '"' + (cur === UNIT_OTHER ? ' selected' : '') + '>+ ' + invEsc(T.otherUnit) + '</option>';
+      if (!cur) sel.value = '';
+      var cliSel = document.getElementById('invf-newc');
+      cliSel.innerHTML = unitOptions(unitAllClients(), T.pickClient, cliSel.value);
+      invBuildingChanged(true);
+    }
+
+    function invBuildingChanged(keepUnit) {
+      var T = invT();
+      var b = document.getElementById('invf-building').value;
+      var isOther = b === UNIT_OTHER;
+      document.getElementById('invf-other-wrap').style.display = isOther ? 'block' : 'none';
+      document.getElementById('invf-unit-wrap').style.display = (b && !isOther) ? 'block' : 'none';
+      var uSel = document.getElementById('invf-unit');
+      var cur = keepUnit === true ? uSel.value : '';
+      uSel.innerHTML = (b && !isOther) ? unitUnitOptions(b, T.pickUnit, cur) : '';
+      invUnitChanged();
+    }
+
+    function invUnitChanged() {
+      var T = invT();
+      var b = document.getElementById('invf-building').value;
+      var u = document.getElementById('invf-unit').value;
+      var chip = document.getElementById('invf-client-chip');
+      var c = (b && b !== UNIT_OTHER && u) ? unitClientOf(b, u) : '';
+      chip.style.display = c ? 'flex' : 'none';
+      chip.innerHTML = c ? ('<span>' + invEsc(T.clientLbl) + '</span><b>' + invEsc(c) + '</b>') : '';
+      invLoadPrev();
+    }
+
+    // { building, unit, client } o null
+    function invGetUnit() {
+      var b = document.getElementById('invf-building').value;
+      if (b === UNIT_OTHER) {
+        var nb = unitNorm(document.getElementById('invf-newb').value);
+        var nu = unitNorm(document.getElementById('invf-newu').value);
+        var nc = document.getElementById('invf-newc').value;
+        if (!nb || !nu || !nc) return null;
+        return { building: nb, unit: nu, client: unitClientOf(nb, nu) || nc };
+      }
+      var u = document.getElementById('invf-unit').value;
+      if (!b || !u) return null;
+      return { building: b, unit: u, client: unitClientOf(b, u) };
+    }
+
+    // ---------- Inventario anterior ----------
+    function invLoadPrev() {
+      if (!currentSide) return;
+      var b = document.getElementById('invf-building').value;
+      var u = document.getElementById('invf-unit').value;
+      var fecha = document.getElementById('invf-date').value;
+      var hasUnit = b && b !== UNIT_OTHER && u;
+      var size = invType === 'linen' ? invSize : '';
+      var key = hasUnit ? [b, u, invType, fecha, size].join('|') : '';
+      if (key === invPrevKey) { invRender(); return; }
+      invPrevKey = key;
+      invPrev = null;
+      var seq = ++invPrevSeq;
+      var box = document.getElementById('invf-prev');
+      if (!hasUnit) { invApplyPrevCustom(); invRenderPrevBox(); invRender(); return; }
+      box.style.display = 'block';
+      box.innerHTML = '<span class="muted">' + invEsc(invT().prevLoading) + '</span>';
+      invApplyPrevCustom();
+      invRender();
+      google.script.run
+        .withSuccessHandler(function (r) {
+          if (seq !== invPrevSeq) return;
+          if (r && r.error) showErr(r.error);
+          invPrev = (r && !r.none && !r.error) ? r : { none: true };
+          invApplyPrevCustom();
+          invRenderPrevBox();
+          invRender();
+        })
+        .withFailureHandler(function (e) { if (seq !== invPrevSeq) return; box.style.display = 'none'; showErr(e); })
+        .getUltimoInventario(b, u, invType, fecha, size);
+    }
+
+    function invHasPrev() { return !!(invPrev && !invPrev.none); }
+
+    function invRenderPrevBox() {
+      var box = document.getElementById('invf-prev');
+      var T = invT();
+      if (!invPrev) { if (!invPrevKey) box.style.display = 'none'; return; }
+      box.style.display = 'block';
+      if (!invHasPrev()) { box.innerHTML = '🆕 ' + invEsc(T.prevNone); return; }
+      var p = invPrev;
+      box.innerHTML = '📋 <b>' + invEsc(T.prevTitle) + ':</b> ' + invEsc(p.fecha) + ' · ' + invEsc(T.prevBy) + ' ' + invEsc(p.cleaner) +
+        (p.size ? ' · ' + invEsc(p.size) : '') +
+        (String(p.pdf).indexOf('http') === 0 ? ' · <a href="' + invEsc(p.pdf) + '" target="_blank">' + invEsc(T.viewPdf) + '</a>' : '') +
+        (p.notas ? '<div class="muted" style="margin-top:4px;">“' + invEsc(p.notas) + '”</div>' : '') +
+        '<div class="muted" style="margin-top:4px; font-size:11px;">' + invEsc(T.prevHint) + '</div>';
+    }
+
+    // Los artículos adicionales del inventario anterior se vuelven a poner para contarlos otra vez
+    function invApplyPrevCustom() {
+      var list = invCustom[invType].filter(function (c) { return !c.auto; });
+      var vals = invValues[invType];
+      invCustom[invType].forEach(function (c) { if (c.auto) delete vals[c.id]; });
+      if (invHasPrev()) {
+        (invPrev.custom || []).forEach(function (c, i) {
+          var exists = list.some(function (x) { return x.name.toUpperCase() === String(c.n).toUpperCase(); });
+          if (exists) return;
+          var id = 'cp' + i;
+          list.push({ id: id, name: String(c.n), auto: true });
+          vals[id] = 0;
+        });
+      }
+      invCustom[invType] = list;
+    }
+
+    function invPrevHint(key, kind) {
+      if (!invHasPrev()) return '';
+      var v = invPrev.values[key];
+      return '<div class="inv-prev">' + invEsc(invT().prevWord) + ': ' + invEsc(fmtVal(v, kind)) + '</div>';
+    }
+
+    function invRender() {
+      var T = invT(), L = invL(), vals = invValues[invType];
+      var h = '';
+      INV_DEF[invType].forEach(function (sec) {
+        h += '<div class="inv-sec"><span>' + sec[L] + '</span><span>' + T.col[sec.col] + '</span></div>';
+        sec.items.forEach(function (it) {
+          var kind = it.kind || sec.kind;
+          var ctrl = '', hint = '';
+          if (kind === 'count') {
+            var step = it.step || 1;
+            if (step < 1) hint = '<div class="inv-hint">' + T.partial + '</div>';
+            ctrl = '<div class="inv-step">' +
+              '<button type="button" data-act="step" data-id="' + it.id + '" data-d="-' + step + '">-</button>' +
+              '<input type="text" inputmode="decimal" class="inv-qty" id="invq-' + it.id + '" data-id="' + it.id + '" value="' + invNum(vals[it.id]) + '">' +
+              '<button type="button" data-act="step" data-id="' + it.id + '" data-d="' + step + '">+</button></div>';
+          } else {
+            var opts = kind === 'ynna' ? ['YES', 'NO', 'N/A'] : ['YES', 'NO'];
+            var lbl = { 'YES': T.yes, 'NO': T.no, 'N/A': T.na };
+            ctrl = '<div class="inv-seg">';
+            opts.forEach(function (o) {
+              ctrl += '<button type="button" data-act="pick" data-id="' + it.id + '" data-v="' + o + '" class="' + (vals[it.id] === o ? 'on' : '') + '">' + lbl[o] + '</button>';
+            });
+            ctrl += '</div>';
+          }
+          h += '<div class="inv-row"><div class="inv-lbl">' + it[L] + hint + invPrevHint(it.en, kind) + '</div>' + ctrl + '</div>';
+        });
+      });
+
+      h += '<div class="inv-sec"><span>' + invEsc(T.customTitle) + '</span><span>' + T.col.qty + '</span></div>';
+      invCustom[invType].forEach(function (c) {
+        h += '<div class="inv-row"><div class="inv-lbl">' + invEsc(c.name) +
+          ' <button type="button" class="inv-x" data-act="delcustom" data-id="' + c.id + '">✕</button>' + invPrevHint(c.name, 'count') + '</div>' +
+          '<div class="inv-step">' +
+          '<button type="button" data-act="step" data-id="' + c.id + '" data-d="-1">-</button>' +
+          '<input type="text" inputmode="decimal" class="inv-qty" id="invq-' + c.id + '" data-id="' + c.id + '" value="' + invNum(vals[c.id]) + '">' +
+          '<button type="button" data-act="step" data-id="' + c.id + '" data-d="1">+</button></div></div>';
+      });
+      h += '<div class="inv-add"><input type="text" id="invc-name" maxlength="60" placeholder="' + invEsc(T.customPh) + '">' +
+        '<button type="button" data-act="addcustom">+ ' + invEsc(T.customAdd) + '</button></div>' +
+        '<div class="inv-hint" style="padding:6px 4px 0;">' + invEsc(T.customHint) + '</div>';
+      document.getElementById('invf-items').innerHTML = h;
+    }
+
+    function invAddCustom() {
+      var inp = document.getElementById('invc-name');
+      var name = unitNorm(inp.value);
+      if (!name) { inp.focus(); return; }
+      var list = invCustom[invType];
+      for (var i = 0; i < list.length; i++) if (list[i].name.toUpperCase() === name.toUpperCase()) { inp.value = ''; return; }
+      var id = 'cx' + Date.now();
+      list.push({ id: id, name: name });
+      invValues[invType][id] = 1;
+      invRender();
+      var q = document.getElementById('invc-name'); if (q) q.focus();
+    }
+
+    function invBindEvents() {
+      var box = document.getElementById('invf-items');
+      box.addEventListener('click', function (e) {
+        var b = e.target.closest('button');
+        if (!b) return;
+        var id = b.getAttribute('data-id'), act = b.getAttribute('data-act');
+        var vals = invValues[invType];
+        if (act === 'step') {
+          var inp = document.getElementById('invq-' + id);
+          var n = invNum(invNum(inp.value) + parseFloat(b.getAttribute('data-d')));
+          inp.value = n; vals[id] = n;
+        } else if (act === 'addcustom') {
+          invAddCustom();
+        } else if (act === 'delcustom') {
+          invCustom[invType] = invCustom[invType].filter(function (c) { return c.id !== id; });
+          delete vals[id];
+          invRender();
+        } else if (act === 'pick') {
+          var v = b.getAttribute('data-v');
+          vals[id] = (vals[id] === v) ? '' : v;
+          b.parentNode.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+          if (vals[id]) b.classList.add('on');
+        }
+      });
+      box.addEventListener('input', function (e) {
+        if (e.target.classList.contains('inv-qty')) invValues[invType][e.target.getAttribute('data-id')] = invNum(e.target.value);
+      });
+      box.addEventListener('keydown', function (e) {
+        if (e.target.id === 'invc-name' && e.key === 'Enter') { e.preventDefault(); invAddCustom(); }
+      });
+      box.addEventListener('focusin', function (e) { if (e.target.classList.contains('inv-qty')) e.target.select(); });
+      box.addEventListener('focusout', function (e) { if (e.target.classList.contains('inv-qty')) e.target.value = invNum(e.target.value); });
+    }
+
+    function invCollect() {
+      var T = invT(), L = invL(), vals = invValues[invType];
+      var fecha = document.getElementById('invf-date').value;
+      var cleaner = document.getElementById('invf-name').value;
+      var un = invGetUnit();
+      if (!fecha || !cleaner || !un) { alert(T.missing); return null; }
+      if (invType === 'linen' && !invSize) { alert(T.missingSize); return null; }
+      var lbl = { 'YES': T.yes, 'NO': T.no, 'N/A': T.na };
+      var items = [];
+      INV_DEF[invType].forEach(function (sec) {
+        sec.items.forEach(function (it) {
+          var kind = it.kind || sec.kind, value, display;
+          if (kind === 'count') { value = invNum(vals[it.id]); display = String(value); }
+          else { value = vals[it.id] || ''; display = value ? lbl[value] : '-'; }
+          items.push({ key: it.en, label: it[L], section: sec[L], sectionEn: sec.en, colKey: sec.col, kind: kind, value: value, display: display });
+        });
+      });
+      return {
+        side: currentSide, tipo: invType, cleaner: cleaner, fecha: fecha,
+        building: un.building, unit: un.unit, client: un.client,
+        propiedad: un.building + ' - ' + (unitIsLocker(un.unit) ? 'Locker' : un.unit),
+        size: invType === 'linen' ? invSize : '',
+        notas: document.getElementById('invf-notes').value.trim(),
+        items: items,
+        custom: invCustom[invType].map(function (c) { return { name: c.name, value: invNum(vals[c.id]) }; })
+      };
+    }
+
+    function invMakeId() {
+      var d = new Date();
+      function z(n) { return String(n).padStart(2, '0'); }
+      return 'INV-' + String(d.getFullYear()).slice(2) + z(d.getMonth() + 1) + z(d.getDate()) + '-' +
+        z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds()) + '-' + Math.floor(100 + Math.random() * 900);
+    }
+
+    function compressImage(file, callback) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onload = function () {
+          var MAX = 1280, w = img.width, h = img.height;
+          if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+          var c = document.createElement('canvas'); c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          callback(c.toDataURL('image/jpeg', 0.7).split(',')[1], 'image/jpeg');
+        };
+        img.onerror = function () { callback(null); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function () { callback(null); };
+      reader.readAsDataURL(file);
+    }
+    function invReadPhotos(cb) {
+      var files = Array.prototype.slice.call(document.getElementById('invf-fotos').files || [], 0, 6);
+      var out = [], i = 0;
+      (function next() {
+        if (i >= files.length) return cb(out);
+        compressImage(files[i++], function (b64, type) { if (b64) out.push({ b64: b64, type: type }); next(); });
+      })();
+    }
+
+    function invSubmit() {
+      var p = invCollect();
+      if (!p) return;
+      var T = invT();
+      var btn = document.getElementById('invx-submit-btn');
+      var lbl = document.getElementById('invx-submit');
+      btn.disabled = true;
+      lbl.innerText = T.uploading;
+      p.id = invMakeId();
+      var prev = invHasPrev() ? invPrev : null;
+      invReadPhotos(function (fotos) {
+        p.fotos = fotos;
+        p.html = '<html><head><meta charset="utf-8"></head><body>' + invBuildReport(p, prev) + '</body></html>';
+        lbl.innerText = T.saving;
+        google.script.run
+          .withSuccessHandler(function (r) {
+            btn.disabled = false; lbl.innerText = invT().submit;
+            if (!r || !r.success) return invShowFail(r ? r.error : 'Sin respuesta del servidor');
+            var T2 = invT();
+            var links = '';
+            if (String(r.pdfUrl).indexOf('http') === 0) links += '<a class="pill-link" href="' + invEsc(r.pdfUrl) + '" target="_blank">📄 ' + invEsc(T2.openPdf) + '</a>';
+            if (r.folder) links += '<a class="pill-link" href="' + invEsc(r.folder) + '" target="_blank">📁 ' + invEsc(T2.openFolder) + '</a>';
+            links += '<button class="pill-link" type="button" onclick="invNew(true)">➕ ' + invEsc(T2.newInv) + '</button>';
+            document.getElementById('invf-result').innerHTML =
+              '<div class="ok-box"><b class="t">✅ ' + invEsc(T2.savedTitle) + '</b>' +
+              invEsc(p.propiedad) + (r.client ? ' (' + invEsc(r.client) + ')' : '') + '<br>' +
+              '<span class="muted">' + invEsc(T2.savedId) + ':</span> <b style="font-family:ui-monospace,Menlo,monospace;">' + invEsc(r.id) + '</b>' +
+              (r.fotos ? ' · ' + r.fotos + ' ' + invEsc(T2.photosWord) : '') + '<br>' +
+              '<span class="muted">' + invEsc(T2.changes) + ':</span> ' + invEsc(r.cambios) +
+              ((r.avisos && r.avisos.length) ? '<div class="warn-line">⚠ ' + invEsc(T2.warnSaved) + ' ' + invEsc(r.avisos.join(' · ')) + '</div>' : '') +
+              '<div class="ok-links">' + links + '</div></div>';
+            // Si era una unidad nueva, se agrega a la lista local
+            if (!unitClientOf(p.building, p.unit)) {
+              (staffData.unidades = staffData.unidades || []).push([p.building, p.unit, r.client || p.client, String(currentSide).toUpperCase()]);
+              _uIdx = null;
+            }
+            document.getElementById('invf-result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          })
+          .withFailureHandler(function (e) { btn.disabled = false; lbl.innerText = invT().submit; invShowFail(e && e.message ? e.message : e); })
+          .guardarInventario(p);
+      });
+    }
+
+    function invShowFail(msg) {
+      var T = invT();
+      var box = document.getElementById('invf-result');
+      box.innerHTML = '<div class="err-box"><b class="t">❌ ' + invEsc(T.saveFail) + '</b>' + invEsc(msg) +
+        '<div class="muted" style="margin-top:6px; font-size:12px;">' + invEsc(T.saveFailHint) + '</div>' +
+        '<div class="ok-links"><button class="pill-link" type="button" onclick="invSubmit()">🔄 ' + invEsc(T.retry) + '</button></div></div>';
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Botón "Nuevo inventario": deja el formulario limpio sin recargar la página
+    function invHasData() {
+      var any = false;
+      Object.keys(invValues).forEach(function (t) {
+        Object.keys(invValues[t]).forEach(function (k) { var v = invValues[t][k]; if (v !== '' && v !== 0 && v !== null && v !== undefined) any = true; });
+      });
+      return any || !!document.getElementById('invf-notes').value.trim();
+    }
+    function invNew(force) {
+      var saved = !!document.querySelector('#invf-result .ok-box');
+      if (!force && !saved && invHasData() && !confirm(invT().confirmNew)) return;
+      invReset();
+    }
+
+    function invReset() {
+      invValues = { supplies: {}, linen: {}, cutlery: {} };
+      invCustom = { supplies: [], linen: [], cutlery: [] };
+      invSize = '';
+      document.getElementById('invsize-Queen').classList.remove('active');
+      document.getElementById('invsize-King').classList.remove('active');
+      var btn = document.getElementById('invx-submit-btn');
+      btn.disabled = false; document.getElementById('invx-submit').innerText = invT().submit;
+      loadLists(true);
+      document.getElementById('invf-unit').value = '';
+      document.getElementById('invf-newb').value = '';
+      document.getElementById('invf-newu').value = '';
+      document.getElementById('invf-notes').value = '';
+      document.getElementById('invf-fotos').value = '';
+      document.getElementById('invf-result').innerHTML = '';
+      invPrevKey = '__reset__';
+      invUnitChanged();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function invPrint() {
+      var p = invCollect();
+      if (!p) return;
+      p.id = '';
+      document.getElementById('inv-print').innerHTML = invBuildReport(p, invHasPrev() ? invPrev : null);
+      window.print();
+    }
+
+    // ==========================================
+    // PDF DEL INVENTARIO (se envía a clientes) · con comparación vs el anterior
+    // INV_PDF_LANG: 'en' = siempre en inglés | 'auto' = idioma de la app
+    // ==========================================
+    var INV_PDF_LANG = 'en';
+    var INV_PDF_TXT = {
+      en: {
+        kicker: 'INVENTORY REPORT', titles: { supplies: 'Inventory & Exit Checklist', linen: 'Bed Linen Inventory', cutlery: 'Kitchen Inventory' },
+        property: 'Property', preparedFor: 'Prepared for', date: 'Date', preparedBy: 'Prepared by', bedSize: 'Bed size',
+        count: 'Count', orderMore: 'Order more?', status: 'Status', previous: 'Previous', current: 'Now',
+        yes: 'YES', no: 'NO', na: 'N/A', pending: '-',
+        restock: 'Items to restock', exitOk: 'Exit checklist', allGood: 'All OK', issues: 'issue(s)',
+        outOfStock: 'Out of stock', itemsCounted: 'Total pieces counted', changed: 'Changes vs previous',
+        prevInv: 'Compared with inventory of', firstInv: 'First inventory on record for this unit', by: 'by',
+        notes: 'Notes from our team', footer: 'Prepared by Clean My BnB', generated: 'Generated', reportId: 'Report ID',
+        additional: 'Additional items'
+      },
+      es: {
+        kicker: 'REPORTE DE INVENTARIO', titles: { supplies: 'Inventario y Checklist de Salida', linen: 'Inventario de Ropa de Cama', cutlery: 'Inventario de Cocina' },
+        property: 'Propiedad', preparedFor: 'Preparado para', date: 'Fecha', preparedBy: 'Preparado por', bedSize: 'Tamaño de cama',
+        count: 'Cantidad', orderMore: '¿Pedir más?', status: 'Estado', previous: 'Anterior', current: 'Ahora',
+        yes: 'SÍ', no: 'NO', na: 'N/A', pending: '-',
+        restock: 'Artículos por reponer', exitOk: 'Checklist de salida', allGood: 'Todo en orden', issues: 'pendiente(s)',
+        outOfStock: 'Agotados', itemsCounted: 'Total de piezas contadas', changed: 'Cambios vs anterior',
+        prevInv: 'Comparado con el inventario del', firstInv: 'Primer inventario registrado para esta unidad', by: 'por',
+        notes: 'Notas de nuestro equipo', footer: 'Preparado por Clean My BnB', generated: 'Generado', reportId: 'ID del reporte',
+        additional: 'Artículos adicionales'
+      }
+    };
+
+    function invBuildReport(p, prev) {
+      var PL = (INV_PDF_LANG === 'auto') ? invL() : INV_PDF_LANG;
+      var R = INV_PDF_TXT[PL];
+      var E = invEsc;
+      var hasPrev = !!(prev && prev.values);
+      var items = p.items.concat((p.custom || []).map(function (c) {
+        return { key: c.name, label: c.name, section: R.additional, sectionEn: R.additional, colKey: 'qty', kind: 'count', value: c.value };
+      }));
+
+      var INK = '#0B1B2B', MUTED = '#6B7A89', LINE = '#E6EDF1', SOFT = '#F4F8FA', BRAND = '#A6FDFF', TEAL = '#0A8F95';
+      function chip(text, bg, color) {
+        return '<span style="display:inline-block;padding:1px 8px;border-radius:999px;background:' + bg + ';color:' + color + ';font-weight:bold;font-size:9px;letter-spacing:0.3px;">' + E(text) + '</span>';
+      }
+      function yn(v) { return v === 'YES' ? R.yes : v === 'NO' ? R.no : v === 'N/A' ? R.na : R.pending; }
+
+      var restock = 0, exitIssues = 0, zero = 0, pieces = 0, changed = 0;
+      items.forEach(function (it) {
+        if (it.colKey === 'order' && it.value === 'YES') restock++;
+        if (it.colKey === 'status' && it.value === 'NO') exitIssues++;
+        if (it.kind === 'count') { pieces += Number(it.value) || 0; if (!(Number(it.value) > 0)) zero++; }
+        if (hasPrev) {
+          var pv = prev.values[it.key];
+          if (pv !== undefined && pv !== null && pv !== '') {
+            if (it.kind === 'count' ? (Number(pv) || 0) !== (Number(it.value) || 0) : String(pv) !== String(it.value)) changed++;
+          }
+        }
+      });
+      pieces = Math.round(pieces * 100) / 100;
+
+      function sumCell(label, value, bg, color) {
+        return '<td style="background:' + bg + ';border-radius:8px;padding:6px 10px;width:25%;">' +
+          '<div style="font-size:7.5px;color:' + MUTED + ';font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;">' + E(label) + '</div>' +
+          '<div style="font-size:13px;font-weight:bold;color:' + color + ';margin-top:1px;">' + E(value) + '</div></td>';
+      }
+      var gap = '<td style="width:6px;"></td>';
+      var summary;
+      if (p.tipo === 'supplies') {
+        summary = sumCell(R.restock, String(restock), restock ? '#FFF6E5' : '#EAF8EF', restock ? '#B45309' : '#15803D') + gap +
+          sumCell(R.exitOk, exitIssues ? (exitIssues + ' ' + R.issues) : R.allGood, exitIssues ? '#FDECEC' : '#EAF8EF', exitIssues ? '#B42318' : '#15803D') + gap +
+          sumCell(R.outOfStock, String(zero), zero ? '#FDECEC' : SOFT, zero ? '#B42318' : INK);
+      } else {
+        summary = sumCell(R.itemsCounted, String(pieces), SOFT, INK) + gap +
+          sumCell(R.outOfStock, String(zero), zero ? '#FDECEC' : '#EAF8EF', zero ? '#B42318' : '#15803D') +
+          (p.size ? gap + sumCell(R.bedSize, p.size.toUpperCase(), SOFT, INK) : '');
+      }
+      if (hasPrev) summary += gap + sumCell(R.changed, String(changed), changed ? '#FFF6E5' : '#EAF8EF', changed ? '#B45309' : '#15803D');
+
+      // Artículos agrupados por sección y repartidos en DOS columnas para que el PDF quepa en una hoja
+      var secs = [], cur = null;
+      items.forEach(function (it) {
+        var secName = PL === 'en' ? it.sectionEn : it.section;
+        if (!cur || cur.name !== secName) {
+          cur = { name: secName, colTxt: it.colKey === 'order' ? R.orderMore : (it.colKey === 'status' ? R.status : R.count), rows: [] };
+          secs.push(cur);
+        }
+        var right, diffTag = '';
+        if (it.kind === 'count') {
+          var n = Number(it.value) || 0;
+          right = n > 0 ? chip(String(n), '#E6FCFD', INK) : chip('0', '#FDECEC', '#B42318');
+        } else if (!it.value) {
+          right = chip(R.pending, SOFT, MUTED);
+        } else if (it.colKey === 'order') {
+          right = it.value === 'YES' ? chip(R.yes, '#FFF1D6', '#B45309') : chip(R.no, '#EAF8EF', '#15803D');
+        } else {
+          right = it.value === 'YES' ? chip(R.yes, '#EAF8EF', '#15803D') : it.value === 'NO' ? chip(R.no, '#FDECEC', '#B42318') : chip(R.na, SOFT, MUTED);
+        }
+        var prevCell = '';
+        if (hasPrev) {
+          var pv = prev.values[it.key];
+          var has = !(pv === undefined || pv === null || pv === '');
+          var pTxt = !has ? '-' : (it.kind === 'count' ? String(Number(pv) || 0) : yn(pv));
+          if (has && it.kind === 'count') {
+            var d = Math.round(((Number(it.value) || 0) - (Number(pv) || 0)) * 100) / 100;
+            if (d > 0) diffTag = '<span style="color:#15803D;font-size:8.5px;font-weight:bold;margin-right:4px;">▲' + d + '</span>';
+            if (d < 0) diffTag = '<span style="color:#B42318;font-size:8.5px;font-weight:bold;margin-right:4px;">▼' + Math.abs(d) + '</span>';
+          } else if (has && String(pv) !== String(it.value)) {
+            diffTag = '<span style="color:#B45309;font-size:8.5px;font-weight:bold;margin-right:4px;">●</span>';
+          }
+          prevCell = '<td style="padding:3px 4px;border-bottom:1px solid ' + LINE + ';text-align:center;font-size:9px;color:' + MUTED + ';width:38px;">' + E(pTxt) + '</td>';
+        }
+        var label = PL === 'en' ? it.key : it.label;
+        cur.rows.push('<tr><td style="padding:3px 6px;border-bottom:1px solid ' + LINE + ';font-size:9.5px;line-height:1.25;color:' + INK + ';">' + E(label) + '</td>' + prevCell +
+          '<td style="padding:2px 6px;border-bottom:1px solid ' + LINE + ';text-align:right;white-space:nowrap;">' + diffTag + right + '</td></tr>');
+      });
+
+      function secHtml(sec, first) {
+        return '<tr><td colspan="' + (hasPrev ? 3 : 2) + '" style="padding:' + (first ? '0' : '7px') + ' 0 0 0;"></td></tr><tr>' +
+          '<td style="padding:4px 6px;background:' + SOFT + ';border-left:3px solid ' + BRAND + ';font-weight:bold;font-size:10px;color:' + INK + ';">' + E(sec.name) + '</td>' +
+          (hasPrev ? '<td style="padding:4px 4px;background:' + SOFT + ';text-align:center;font-size:7.5px;font-weight:bold;color:' + MUTED + ';text-transform:uppercase;">' + E(R.previous) + '</td>' : '') +
+          '<td style="padding:4px 6px;background:' + SOFT + ';text-align:right;font-size:7.5px;font-weight:bold;color:' + MUTED + ';text-transform:uppercase;white-space:nowrap;">' + E(hasPrev ? R.current : sec.colTxt) + '</td></tr>' +
+          sec.rows.join('');
+      }
+      var totalRows = secs.reduce(function (a, x) { return a + x.rows.length + 1; }, 0);
+      var leftHtml = '', rightHtml = '', leftCount = 0, toRight = false;
+      secs.forEach(function (sec) {
+        var size = sec.rows.length + 1;
+        if (!toRight && leftCount > 0 && leftCount + size / 2 > totalRows / 2) toRight = true;
+        if (!toRight) { leftHtml += secHtml(sec, leftCount === 0); leftCount += size; }
+        else { rightHtml += secHtml(sec, rightHtml === ''); }
+      });
+      var colTable = function (h) { return '<table style="width:100%;border-collapse:collapse;">' + h + '</table>'; };
+      var body = rightHtml
+        ? '<table style="width:100%;border-collapse:collapse;margin-top:6px;"><tr>' +
+            '<td style="width:49%;vertical-align:top;padding:0;">' + colTable(leftHtml) + '</td>' +
+            '<td style="width:2%;"></td>' +
+            '<td style="width:49%;vertical-align:top;padding:0;">' + colTable(rightHtml) + '</td></tr></table>'
+        : '<div style="margin-top:6px;">' + colTable(leftHtml) + '</div>';
+
+      function info(label, value) {
+        return '<td style="padding:6px 10px;background:' + SOFT + ';border-radius:8px;vertical-align:top;width:25%;">' +
+          '<div style="font-size:7.5px;color:' + MUTED + ';font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;">' + E(label) + '</div>' +
+          '<div style="font-size:11px;font-weight:bold;color:' + INK + ';margin-top:1px;">' + E(value) + '</div></td>';
+      }
+      var title = R.titles[p.tipo] + (p.size ? ' - ' + p.size.toUpperCase() : '');
+      var cmpLine = hasPrev
+        ? R.prevInv + ' ' + prev.fecha + ' (' + R.by + ' ' + prev.cleaner + (prev.size ? ', ' + prev.size : '') + ')'
+        : R.firstInv;
+      var notes = '';
+      if (p.notas) {
+        notes = '<table style="width:100%;border-collapse:collapse;margin-top:10px;"><tr>' +
+          '<td style="padding:7px 10px;border:1px solid ' + LINE + ';border-left:3px solid ' + TEAL + ';">' +
+          '<div style="font-size:7.5px;color:' + MUTED + ';font-weight:bold;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:3px;">' + E(R.notes) + '</div>' +
+          '<div style="font-size:9.5px;color:' + INK + ';line-height:1.4;">' + E(p.notas).split(String.fromCharCode(10)).join('<br>') + '</div></td></tr></table>';
+      }
+
+      return '<div style="font-family:Helvetica,Arial,sans-serif;color:' + INK + ';max-width:720px;margin:0 auto;">' +
+        '<div style="height:4px;background:' + BRAND + ';border-radius:4px;"></div>' +
+        '<table style="width:100%;border-collapse:collapse;margin-top:8px;"><tr>' +
+          '<td style="vertical-align:middle;width:40%;"><img src="' + INV_LOGO + '" alt="Clean My BnB" style="max-height:40px;max-width:160px;"></td>' +
+          '<td style="vertical-align:middle;text-align:right;">' +
+            '<div style="font-size:8px;font-weight:bold;letter-spacing:1.2px;color:' + TEAL + ';">' + E(R.kicker) + '</div>' +
+            '<div style="font-size:16px;font-weight:bold;color:' + INK + ';margin-top:2px;">' + E(title) + '</div>' +
+            (p.id ? '<div style="font-size:7.5px;color:' + MUTED + ';margin-top:2px;">' + E(R.reportId) + ': ' + E(p.id) + '</div>' : '') +
+          '</td></tr></table>' +
+        '<table style="width:100%;border-collapse:separate;border-spacing:0;margin-top:8px;"><tr>' +
+          info(R.property, p.propiedad) + gap + info(R.preparedFor, p.client || '-') + gap + info(R.date, p.fecha) + gap + info(R.preparedBy, p.cleaner) +
+        '</tr></table>' +
+        '<table style="width:100%;border-collapse:separate;border-spacing:0;margin-top:6px;"><tr>' + summary + '</tr></table>' +
+        '<div style="font-size:8.5px;color:' + MUTED + ';margin-top:6px;">' + E(cmpLine) + '</div>' +
+        body +
+        notes +
+        '<table style="width:100%;border-collapse:collapse;margin-top:10px;border-top:1px solid ' + LINE + ';"><tr>' +
+          '<td style="padding-top:5px;font-size:8px;color:' + MUTED + ';"><b style="color:' + INK + ';">' + E(R.footer) + '</b> - ' + E(String(p.side).toUpperCase()) + '</td>' +
+          '<td style="padding-top:5px;font-size:8px;color:' + MUTED + ';text-align:right;">' + E(R.generated) + ' ' + E(new Date().toLocaleString('en-US')) + '</td>' +
+        '</tr></table></div>';
+    }
+
+    // ==========================================
+    // HISTORIAL Y COMPARACIÓN
+    // ==========================================
+    function hFillBuildings() {
+      var sel = document.getElementById('h-building');
+      var cur = sel.value;
+      var list = unitIndex().buildings;
+      if (cur && list.indexOf(cur) === -1) cur = '';
+      sel.innerHTML = unitOptions(list, invT().pickBuilding, cur);
+      hBuildingChanged(true);
+    }
+    function hBuildingChanged(keep) {
+      var b = document.getElementById('h-building').value;
+      var uSel = document.getElementById('h-unit');
+      var cur = keep === true ? uSel.value : '';
+      uSel.innerHTML = b ? unitUnitOptions(b, invT().pickUnit, cur) : '';
+      if (keep !== true) document.getElementById('h-result').innerHTML = '';
+    }
+    function hSetType(t) {
+      hType = t;
+      ['supplies', 'linen', 'cutlery'].forEach(function (k) { document.getElementById('htab-' + k).classList.toggle('active', k === t); });
+      if (document.getElementById('h-unit').value) hLoad();
+    }
+
+    function hLoad() {
+      var b = document.getElementById('h-building').value;
+      var u = document.getElementById('h-unit').value;
+      var pass = document.getElementById('h-pass').value;
+      var T = invT();
+      if (!b || !u || !pass) return alert(T.missing);
+      var box = document.getElementById('h-result');
+      box.innerHTML = '<p class="muted" style="text-align:center; font-size:12px; margin-top:16px;">' + invEsc(T.loading) + '</p>';
+      google.script.run
+        .withSuccessHandler(function (r) {
+          if (!r || r.error) { box.innerHTML = ''; return alert(r && r.error === 'DENIED' ? T.denied : 'Error: ' + (r ? r.error : '')); }
+          try { sessionStorage.setItem('inv_adm_pass', pass); } catch (e) {}
+          hRender(r);
+        })
+        .withFailureHandler(function (e) { box.innerHTML = ''; showErr(e); })
+        .getHistorialUnidad(b, u, hType, pass);
+    }
+
+    function hRender(r) {
+      var T = invT();
+      var box = document.getElementById('h-result');
+      if (!r.rows.length) { box.innerHTML = '<p class="muted" style="text-align:center; font-size:13px; margin-top:18px;">' + invEsc(T.noHistory) + '</p>'; return; }
+
+      // Tabla comparativa
+      var h = '<div class="sec-title">' + invEsc(T.histCompare) + '</div><div class="cmp-wrap"><table class="cmp"><thead><tr><th>' + invEsc(T.histItem) + '</th>';
+      r.cols.forEach(function (c) {
+        h += '<th>' + invEsc(c.fecha) + '<small>' + invEsc(c.cleaner) + (c.size ? ' · ' + invEsc(c.size) : '') + '</small></th>';
+      });
+      h += '</tr></thead><tbody>';
+      var lastSec = null;
+      r.items.forEach(function (it) {
+        if (it.sec !== lastSec) { lastSec = it.sec; h += '<tr class="sec"><td colspan="' + (r.cols.length + 1) + '">' + invEsc(nameOf(it.sec)) + '</td></tr>'; }
+        h += '<tr><td>' + invEsc(nameOf(it.key)) + '</td>';
+        it.vals.forEach(function (v, j) {
+          var older = null;
+          for (var q = j + 1; q < it.vals.length; q++) { if ((r.cols[q].size || '') === (r.cols[j].size || '')) { older = it.vals[q]; break; } }
+          var has = !(v === null || v === undefined || v === '');
+          var hasOld = !(older === null || older === undefined || older === '');
+          var cls = has ? '' : 'na', extra = '';
+          if (has && hasOld) {
+            if (it.kind === 'count') {
+              var d = Math.round(((Number(v) || 0) - (Number(older) || 0)) * 100) / 100;
+              if (d < 0) { cls = 'dn'; extra = '<small>' + d + '</small>'; }
+              if (d > 0) { cls = 'up'; extra = '<small>+' + d + '</small>'; }
+            } else if (String(v) !== String(older)) cls = 'chg';
+          }
+          h += '<td class="' + cls + '">' + invEsc(fmtVal(v, it.kind)) + extra + '</td>';
+        });
+        h += '</tr>';
+      });
+      h += '</tbody></table></div>' +
+        '<div class="legend"><span><i style="background:var(--dn-bg);border:1px solid var(--dn);"></i>' + invEsc(T.lgDn) + '</span>' +
+        '<span><i style="background:var(--up-bg);border:1px solid var(--up);"></i>' + invEsc(T.lgUp) + '</span>' +
+        '<span><i style="background:var(--chg-bg);border:1px solid var(--chg);"></i>' + invEsc(T.lgChg) + '</span></div>';
+
+      // Lista de inventarios
+      h += '<div class="sec-title">' + invEsc(T.histList) + ' (' + r.rows.length + ')</div>';
+      r.rows.forEach(function (x) {
+        var links = '';
+        if (String(x.pdf).indexOf('http') === 0) links += '<a class="pill-link" href="' + invEsc(x.pdf) + '" target="_blank">📄 PDF</a>';
+        x.fotos.forEach(function (f, i) { links += '<a class="pill-link" href="' + invEsc(f) + '" target="_blank">📷 ' + invEsc(T.photo) + ' ' + (i + 1) + '</a>'; });
+        if (x.folder) links += '<a class="pill-link" href="' + invEsc(x.folder) + '" target="_blank">📁</a>';
+        var stats = '<span>' + invEsc(x.piezas) + ' ' + invEsc(T.pieces) + '</span><span>' + invEsc(x.cero) + ' ' + invEsc(T.zero) + '</span>';
+        if (hType === 'supplies') stats += '<span>' + invEsc(x.pedir) + ' ' + invEsc(T.toOrder) + '</span><span>' + invEsc(x.checkNo) + ' ' + invEsc(T.checkNo) + '</span>';
+        h += '<div class="hcard"><div class="hcard-top"><b>' + invEsc(x.fecha) + ' · ' + invEsc(x.cleaner) + (x.size ? ' · ' + invEsc(x.size) : '') + '</b>' +
+          '<span class="hcard-id">' + invEsc(x.id) + '</span></div>' +
+          '<div class="hstats">' + stats + '</div>' +
+          (x.cambios ? '<div class="hchg"><span class="muted">' + invEsc(T.changes) + ':</span> ' + invEsc(x.cambios) + '</div>' : '') +
+          (x.notas ? '<div class="hchg">📝 ' + invEsc(x.notas) + '</div>' : '') +
+          (links ? '<div class="ok-links">' + links + '</div>' : '') + '</div>';
+      });
+      box.innerHTML = h;
+    }
+
+    // ==========================================
+    // REPORTE DE LINEN
+    // ==========================================
+    var REP_DATA = null, REP_OPTS = null, repType = 'linen';
+    var REP_SHORT = {
+      'Toilet Paper (rolls)': { es: 'P. hig.', en: 'TP' }, 'Paper Towel (rolls)': { es: 'P. cocina', en: 'P. towel' },
+      'Body Wash (bottle)': { es: 'Gel baño', en: 'Body w.' }, 'Shampoo (bottle)': { es: 'Shampoo', en: 'Shampoo' },
+      'Conditioner (bottle)': { es: 'Acond.', en: 'Cond.' }, 'Hand Soap (refill bottle)': { es: 'J. manos', en: 'H. soap' },
+      'Garbage Bags (kitchen)': { es: 'Bolsa coc.', en: 'Bags K' }, 'Garbage Bags (washroom)': { es: 'Bolsa baño', en: 'Bags W' },
+      'Light Bulbs': { es: 'Focos', en: 'Bulbs' }, 'Batteries (AA)': { es: 'AA', en: 'AA' }, 'Batteries (AAA)': { es: 'AAA', en: 'AAA' },
+      'Fob Batteries': { es: 'Bat. FOB', en: 'Fob bat.' },
+      'Dinner Forks': { es: 'Tenedor', en: 'Forks' }, 'Salad / Dessert Forks': { es: 'Ten. postre', en: 'S. forks' },
+      'Dinner Knives': { es: 'Cuchillo', en: 'Knives' }, 'Steak Knives': { es: 'C. carne', en: 'Steak' },
+      'Tablespoons / Soup Spoons': { es: 'Cuchara', en: 'Spoons' }, 'Teaspoons': { es: 'Cucharita', en: 'Tsp' },
+      'Dinner Plates': { es: 'Plato gr.', en: 'Plates' }, 'Side Plates': { es: 'Plato ch.', en: 'S. plates' },
+      'Bowls': { es: 'Bowls', en: 'Bowls' }, 'Mugs': { es: 'Tazas', en: 'Mugs' },
+      'Drinking Glasses': { es: 'Vasos', en: 'Glasses' }, 'Wine Glasses': { es: 'Copas', en: 'Wine' },
+      'Flat Sheets': { es: 'Planas', en: 'Flat' }, 'Fitted Sheets': { es: 'Ajust.', en: 'Fitted' },
+      'Pillowcases': { es: 'Fundas', en: 'Cases' }, 'Pillows': { es: 'Almoh.', en: 'Pillows' },
+      'Duvet Covers': { es: 'F. edred.', en: 'D. cover' }, 'Duvets / Comforters': { es: 'Edredón', en: 'Duvet' },
+      'Bath Towels': { es: 'T. baño', en: 'Bath' }, 'Hand Towels': { es: 'T. manos', en: 'Hand' },
+      'Grey Face Towels': { es: 'T. rostro', en: 'Face' }, 'Bath Mats': { es: 'Tapetes', en: 'Mats' }
+    };
+    var REP_TXT = {
+      es: {
+        kickers: { linen: 'REPORTE DE ROPA DE CAMA', supplies: 'REPORTE DE SUPPLIES', cutlery: 'REPORTE DE COCINA' }, generated: 'Generado', area: 'Zona', both: 'West + East',
+        units: 'Unidades', counted: 'Con inventario', missing: 'Sin inventario', coverage: 'Cobertura', pieces: 'Piezas totales',
+        losses: 'Bajas vs anterior', old: 'Conteos +30 días',
+        general: 'Totales generales', item: 'Artículo', total: 'Total actual', change: 'Cambio vs anterior',
+        byBuilding: 'Por edificio', clientsCol: 'Clientes', byClient: 'Por cliente', client: 'Cliente', lastCount: 'Último conteo', totalPcs: 'Total', drops: 'Bajas',
+        byUnit: 'Por unidad', byUnitHint: 'Último inventario de cada unidad (y tamaño de cama). El número pequeño es el cambio contra el conteo anterior.',
+        byUnitHint2: 'Último inventario de cada unidad. El número pequeño es el cambio contra el conteo anterior.',
+        bld: 'Edificio', unit: 'Unidad', bed: 'Cama', date: 'Fecha', days: 'Días', cleaner: 'Cleaner', delta: 'Δ', others: 'Otros',
+        noInv: 'Unidades sin inventario de este tipo', noInvNone: 'Todas las unidades tienen al menos un inventario de este tipo.',
+        locker: 'Locker', firstNote: 'Sin conteo anterior para comparar', atZero: 'Unid. en cero',
+        toOrder: 'Por pedir', toOrderHint: 'Artículos que la cleaner marcó "¿Pedir más? = Sí" en el último inventario de cada unidad.', orderNone: 'Nada por pedir.',
+        unitsAsking: 'Unidades que piden', itemsToOrder: 'Artículos por pedir', checkNo: 'Checklist en NO', checkNone: 'Todo el checklist de salida en orden.',
+        checkHint: 'Puntos del checklist de salida que quedaron en "No".', where: 'Dónde', point: 'Punto', order: 'Pedir', chk: 'Check NO'
+      },
+      en: {
+        kickers: { linen: 'BED LINEN REPORT', supplies: 'SUPPLIES REPORT', cutlery: 'KITCHEN REPORT' }, generated: 'Generated', area: 'Area', both: 'West + East',
+        units: 'Units', counted: 'With inventory', missing: 'No inventory', coverage: 'Coverage', pieces: 'Total pieces',
+        losses: 'Drops vs previous', old: 'Counts 30+ days old',
+        general: 'Overall totals', item: 'Item', total: 'Current total', change: 'Change vs previous',
+        byBuilding: 'By building', clientsCol: 'Clients', byClient: 'By client', client: 'Client', lastCount: 'Last count', totalPcs: 'Total', drops: 'Drops',
+        byUnit: 'By unit', byUnitHint: 'Latest inventory of each unit (and bed size). The small number is the change vs the previous count.',
+        byUnitHint2: 'Latest inventory of each unit. The small number is the change vs the previous count.',
+        bld: 'Building', unit: 'Unit', bed: 'Bed', date: 'Date', days: 'Days', cleaner: 'Cleaner', delta: 'Δ', others: 'Other',
+        noInv: 'Units with no inventory of this type', noInvNone: 'Every unit has at least one inventory of this type.',
+        locker: 'Locker', firstNote: 'No previous count to compare', atZero: 'Units at 0',
+        toOrder: 'To order', toOrderHint: 'Items the cleaner marked "Order more? = Yes" in the latest inventory of each unit.', orderNone: 'Nothing to order.',
+        unitsAsking: 'Units asking', itemsToOrder: 'Items to order', checkNo: 'Checklist NO', checkNone: 'Exit checklist all OK.',
+        checkHint: 'Exit checklist points left as "No".', where: 'Where', point: 'Point', order: 'Order', chk: 'Check NO'
+      }
+    };
+
+    function repFillFiltro() {
+      var sel = document.getElementById('r-filtro');
+      if (!sel) return;
+      var T = invT(), cur = sel.value || 'rp';
+      var grupos = staffData.grupos && staffData.grupos.length ? staffData.grupos : [{ id: 'rp', nombre: 'Return Policy + Mason PM + Peter' }];
+      var seen = {}, clients = [];
+      (staffData.unidades || []).forEach(function (r) {
+        var c = unitNorm(r[2]);
+        if (c && !seen[c.toUpperCase()]) { seen[c.toUpperCase()] = true; clients.push(c); }
+      });
+      clients.sort(unitSort);
+      var h = '<optgroup label="' + invEsc(T.repGroups) + '">';
+      grupos.forEach(function (g) { h += '<option value="' + invEsc(g.id) + '">⭐ ' + invEsc(g.nombre) + '</option>'; });
+      h += '<option value="all">' + invEsc(T.repAll) + '</option></optgroup><optgroup label="' + invEsc(T.repClients) + '">';
+      clients.forEach(function (c) { h += '<option value="' + invEsc('c:' + c) + '">' + invEsc(c) + '</option>'; });
+      h += '</optgroup>';
+      sel.innerHTML = h;
+      sel.value = cur;
+      if (sel.value !== cur) sel.value = grupos[0].id;
+    }
+
+    function repSetType(t) {
+      repType = t;
+      ['linen', 'supplies', 'cutlery'].forEach(function (k) { document.getElementById('rtab-' + k).classList.toggle('active', k === t); });
+      REP_DATA = null;
+      document.getElementById('r-actions').style.display = 'none';
+      document.getElementById('r-client').style.display = 'none';
+      document.getElementById('r-client-hint').style.display = 'none';
+      document.getElementById('r-result').innerHTML = '';
+      document.getElementById('r-msg').innerHTML = '';
+      if (document.getElementById('r-pass').value) repLoad();
+    }
+
+    function repLoad() {
+      var T = invT();
+      var pass = document.getElementById('r-pass').value;
+      if (!pass) return alert(T.histPass);
+      var opts = { tipo: repType, filtro: document.getElementById('r-filtro').value, side: document.getElementById('r-side').value };
+      var btn = document.getElementById('r-btn');
+      btn.disabled = true; btn.innerText = T.loading;
+      document.getElementById('r-msg').innerHTML = '';
+      google.script.run
+        .withSuccessHandler(function (r) {
+          btn.disabled = false; btn.innerText = invT().repGen;
+          if (!r || r.error) return alert(r && r.error === 'DENIED' ? invT().denied : 'Error: ' + (r ? r.error : ''));
+          try { sessionStorage.setItem('inv_adm_pass', pass); } catch (e) {}
+          REP_DATA = r; REP_OPTS = opts;
+          document.getElementById('r-actions').style.display = 'flex';
+          document.getElementById('r-client').style.display = 'block';
+          document.getElementById('r-client-hint').style.display = 'block';
+          document.getElementById('r-result').innerHTML = '<div class="rep-paper">' + repBuild(r, true) + '</div>';
+        })
+        .withFailureHandler(function (e) { btn.disabled = false; btn.innerText = invT().repGen; showErr(e); })
+        .getReporte(opts, pass);
+    }
+
+    function repExport() {
+      if (!REP_DATA) return;
+      var T = invT();
+      var btn = document.getElementById('r-save');
+      btn.disabled = true;
+      var html = '<html><head><meta charset="utf-8"></head><body>' + repBuild(REP_DATA, false) + '</body></html>';
+      document.getElementById('r-msg').innerHTML = '<p class="muted" style="font-size:12px;">' + invEsc(T.repSaving) + '</p>';
+      google.script.run
+        .withSuccessHandler(function (r) {
+          btn.disabled = false;
+          if (!r || r.error) { document.getElementById('r-msg').innerHTML = ''; return alert('Error: ' + (r ? r.error : '')); }
+          var T2 = invT(), links = '';
+          if (String(r.pdfUrl).indexOf('http') === 0) links += '<a class="pill-link" href="' + invEsc(r.pdfUrl) + '" target="_blank">📄 PDF</a>';
+          else if (r.pdfUrl) links += '<span class="warn-line">⚠ ' + invEsc(r.pdfUrl) + '</span>';
+          links += '<a class="pill-link" href="' + invEsc(r.sheetUrl) + '" target="_blank">📊 ' + invEsc(T2.repSheet) + ' ' + invEsc(r.tab || '') + '</a>';
+          document.getElementById('r-msg').innerHTML = '<div class="ok-box"><b class="t">✅ ' + invEsc(T2.repSaved) + '</b><div class="ok-links">' + links + '</div></div>';
+        })
+        .withFailureHandler(function (e) { btn.disabled = false; document.getElementById('r-msg').innerHTML = ''; showErr(e); })
+        .exportarReporte(REP_OPTS, html, document.getElementById('r-pass').value);
+    }
+
+    function repPrint() {
+      if (!REP_DATA) return;
+      document.getElementById('inv-print').innerHTML = repBuild(REP_DATA, false);
+      window.print();
+    }
+
+    // ---------- PDF PARA EL CLIENTE (inglés, por edificio, sin datos internos) ----------
+    function repClientPdf() {
+      if (!REP_DATA) return;
+      var T = invT(), btn = document.getElementById('r-client');
+      btn.disabled = true;
+      document.getElementById('r-msg').innerHTML = '<p class="muted" style="font-size:12px;">' + invEsc(T.repSaving) + '</p>';
+      var html = '<html><head><meta charset="utf-8"></head><body>' + repBuildClient(REP_DATA) + '</body></html>';
+      google.script.run
+        .withSuccessHandler(function (r) {
+          btn.disabled = false;
+          if (!r || r.error) { document.getElementById('r-msg').innerHTML = ''; return alert('Error: ' + (r ? r.error : '')); }
+          var T2 = invT();
+          document.getElementById('r-msg').innerHTML = '<div class="ok-box"><b class="t">✅ ' + invEsc(T2.repClientSaved) + '</b>' + invEsc(r.name) +
+            '<div class="ok-links"><a class="pill-link" href="' + invEsc(r.pdfUrl) + '" target="_blank">📄 PDF</a>' +
+            '<a class="pill-link" href="' + invEsc(r.folder) + '" target="_blank">📁 ' + invEsc(T2.openFolder2) + '</a></div></div>';
+          document.getElementById('r-msg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+        .withFailureHandler(function (e) { btn.disabled = false; document.getElementById('r-msg').innerHTML = ''; showErr(e); })
+        .guardarPdfCliente(REP_OPTS, html, document.getElementById('r-pass').value);
+    }
+
+    // Orden de edificios por nombre de calle (Bay, Capreol, Iceboat...) y luego por número
+    function bldSortKey(b) {
+      var m = String(b).match(/^(\d+[A-Za-z]?)\s+(.*)$/);
+      return m ? (m[2] + ' ' + ('000000' + parseInt(m[1], 10)).slice(-6)) : String(b);
+    }
+
+    function repBuildClient(r) {
+      var E = invEsc;
+      var INK = '#0B1B2B', MUTED = '#6B7A89', LINE = '#E6EDF1', SOFT = '#F4F8FA', BRAND = '#A6FDFF', TEAL = '#0A8F95';
+      var RED = '#B42318', REDBG = '#FDECEC', GRN = '#15803D', GRNBG = '#EAF8EF', AMB = '#B45309', AMBBG = '#FFF1D6';
+      var isSup = r.tipo === 'supplies';
+      var titles = { linen: 'Bed Linen Summary', supplies: 'Supplies Summary', cutlery: 'Kitchen Summary' };
+      var fs = r.items.length > 10 ? 7.2 : 8.2;
+      var coll = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+      function short(k) { return REP_SHORT[k] ? REP_SHORT[k].en : k; }
+      function n(v) { return (v === null || v === undefined) ? '-' : String(Math.round(v * 100) / 100); }
+      function sum(a) { return Math.round(a.reduce(function (x, v) { return x + (v || 0); }, 0) * 100) / 100; }
+      var th = 'padding:3px 2px;background:' + SOFT + ';font-size:' + (fs - 1) + 'px;font-weight:bold;color:' + MUTED + ';text-transform:uppercase;border-bottom:1px solid ' + LINE + ';text-align:center;';
+      var td = 'padding:3px 2px;border-bottom:1px solid ' + LINE + ';font-size:' + fs + 'px;color:' + INK + ';text-align:center;';
+
+      // Filas a nivel unidad: { side, building, unit, client, locker, sizes, fecha, have[], par[], falta[], camasTxt, banosTxt }
+      var units;
+      if (r.porUnidad) {
+        units = r.porUnidad;
+      } else {
+        units = r.perUnit.map(function (u) {
+          return { side: u.side, building: u.building, unit: u.unit, client: u.client, locker: u.locker, sizes: u.size ? [u.size] : [],
+            fecha: u.fecha, counted: true, have: u.vals, par: null, falta: null, pedir: u.pedir };
+        }).concat(r.sinInventario.map(function (u) {
+          return { side: u.side, building: u.building, unit: u.unit, client: u.client, locker: u.locker, counted: false };
+        }));
+      }
+      var hasPar = !!(r.par && r.par.conCuartos);
+      var mixed = Object.keys(units.reduce(function (a, u) { a[u.client] = 1; return a; }, {})).length > 1;
+
+      // Región -> edificio -> unidades
+      var regions = {}, rOrder = [];
+      units.forEach(function (u) {
+        var rg = String(u.side || 'OTHER').toUpperCase();
+        if (!regions[rg]) { regions[rg] = { name: rg, b: {}, bOrder: [] }; rOrder.push(rg); }
+        var R = regions[rg], bk = String(u.building).toUpperCase();
+        if (!R.b[bk]) { R.b[bk] = { name: u.building, rows: [], missing: [] }; R.bOrder.push(bk); }
+        (u.counted ? R.b[bk].rows : R.b[bk].missing).push(u);
+      });
+      var regRank = { WEST: 0, EAST: 1 };
+      rOrder.sort(function (a, b) { return (regRank[a] === undefined ? 9 : regRank[a]) - (regRank[b] === undefined ? 9 : regRank[b]); });
+
+      function agg(list) {
+        var o = { units: list.length, counted: 0, have: r.items.map(function () { return 0; }), par: r.items.map(function () { return 0; }),
+          falta: r.items.map(function () { return 0; }), withPar: 0 };
+        list.forEach(function (u) {
+          if (!u.counted) return;
+          o.counted++;
+          (u.have || []).forEach(function (v, i) { o.have[i] += v || 0; });
+          if (u.par && u.falta) { o.withPar++; u.par.forEach(function (v, i) { o.par[i] += v || 0; }); u.falta.forEach(function (v, i) { o.falta[i] += v || 0; }); }
+        });
+        return o;
+      }
+      var all = agg(units);
+
+      function tile(label, value, bg, color) {
+        return '<td style="background:' + bg + ';border-radius:8px;padding:6px 10px;vertical-align:top;width:25%;">' +
+          '<div style="font-size:7.5px;color:' + MUTED + ';font-weight:bold;letter-spacing:0.5px;text-transform:uppercase;">' + E(label) + '</div>' +
+          '<div style="font-size:14px;font-weight:bold;color:' + color + ';margin-top:1px;">' + E(value) + '</div></td>';
+      }
+      var gap = '<td style="width:6px;"></td>';
+      var totalOrder = sum(all.falta);
+      var nB = rOrder.reduce(function (a, k) { return a + regions[k].bOrder.length; }, 0);
+
+      var h = '<div style="font-family:Helvetica,Arial,sans-serif;color:' + INK + ';">' +
+        '<div style="height:4px;background:' + BRAND + ';border-radius:4px;"></div>' +
+        '<table style="width:100%;border-collapse:collapse;margin-top:8px;"><tr>' +
+        '<td style="vertical-align:middle;"><img src="' + INV_LOGO + '" alt="Clean My BnB" style="max-height:40px;max-width:160px;"></td>' +
+        '<td style="vertical-align:middle;text-align:right;">' +
+        '<div style="font-size:8px;font-weight:bold;letter-spacing:1.2px;color:' + TEAL + ';">' + E(titles[r.tipo].toUpperCase()) + '</div>' +
+        '<div style="font-size:17px;font-weight:bold;margin-top:2px;">' + E(r.filtroPdf || r.filtro) + '</div>' +
+        '<div style="font-size:8px;color:' + MUTED + ';margin-top:2px;">' + E(rOrder.join(' & ')) + ' · Prepared ' + E(r.generado.slice(0, 10)) + '</div>' +
+        '</td></tr></table>' +
+        '<table style="width:100%;border-collapse:separate;border-spacing:0;margin-top:8px;"><tr>' +
+        tile('Buildings', String(nB), SOFT, INK) + gap +
+        tile('Units counted', all.counted + ' / ' + all.units, all.counted < all.units ? '#FFF6E5' : GRNBG, all.counted < all.units ? AMB : GRN) + gap +
+        tile('Pieces on hand', n(sum(all.have)), SOFT, INK) + gap +
+        (hasPar ? tile('Pieces to order', n(totalOrder), totalOrder ? AMBBG : GRNBG, totalOrder ? AMB : GRN)
+          : tile('Items at zero', String(units.reduce(function (a, u) { return a + (u.have || []).filter(function (v) { return v === 0; }).length; }, 0)), REDBG, RED)) +
+        '</tr></table>';
+
+      // Resumen por región
+      var ov = '<table style="width:100%;border-collapse:collapse;margin-top:10px;"><tr><td style="' + th + 'text-align:left;">' + (hasPar ? 'To order by region' : 'On hand by region') + '</td>' +
+        '<td style="' + th + '">Units</td>';
+      r.items.forEach(function (it) { ov += '<td style="' + th + '">' + E(short(it)) + '</td>'; });
+      ov += '<td style="' + th + '">Total</td></tr>';
+      rOrder.concat(rOrder.length > 1 ? ['__ALL__'] : []).forEach(function (rg) {
+        var list = rg === '__ALL__' ? units : [];
+        if (rg !== '__ALL__') regions[rg].bOrder.forEach(function (bk) { var B = regions[rg].b[bk]; list = list.concat(B.rows, B.missing); });
+        var g = agg(list), vals = hasPar ? g.falta : g.have, isAll = rg === '__ALL__';
+        var pending = hasPar && !g.withPar;
+        ov += '<tr><td style="' + td + 'text-align:left;font-weight:bold;' + (isAll ? 'background:' + SOFT + ';' : '') + '">' + (isAll ? 'All regions' : E(rg)) + '</td>' +
+          '<td style="' + td + (isAll ? 'background:' + SOFT + ';' : '') + '">' + g.counted + '/' + g.units + '</td>';
+        if (pending) {
+          ov += '<td colspan="' + (r.items.length + 1) + '" style="' + td + 'color:' + MUTED + ';font-style:italic;">Bedroom / bathroom info pending — minimums not calculated yet</td></tr>';
+        } else {
+          vals.forEach(function (v) { ov += '<td style="' + td + 'font-weight:bold;' + (hasPar && v ? 'color:' + AMB + ';' : '') + (isAll ? 'background:' + SOFT + ';' : '') + '">' + n(v) + '</td>'; });
+          ov += '<td style="' + td + 'font-weight:bold;' + (isAll ? 'background:' + SOFT + ';' : '') + '">' + n(sum(vals)) + '</td></tr>';
+        }
+      });
+      h += ov + '</table>';
+
+      var ncols = 3 + r.items.length + 1 + (hasPar ? 1 : 0) + (isSup ? 1 : 0);
+      rOrder.forEach(function (rg) {
+        var R = regions[rg];
+        var rl = []; R.bOrder.forEach(function (bk) { rl = rl.concat(R.b[bk].rows, R.b[bk].missing); });
+        var g = agg(rl);
+        h += '<div style="margin-top:16px;padding:6px 10px;background:' + TEAL + ';color:#fff;font-size:' + (fs + 5) + 'px;font-weight:bold;border-radius:6px;page-break-after:avoid;">' + E(rg) +
+          '<span style="font-size:' + (fs + 0.5) + 'px;font-weight:normal;"> · ' + R.bOrder.length + ' buildings · ' + g.counted + '/' + g.units + ' units counted' +
+          (hasPar ? (g.withPar ? ' · ' + n(sum(g.falta)) + ' pieces to order' : ' · bedroom info pending') : '') + '</span></div>';
+        if (hasPar && g.withPar) {
+          var rs = '<table style="width:100%;border-collapse:collapse;margin-top:4px;"><tr><td style="' + th + 'text-align:left;">' + E(rg) + ' totals</td>';
+          r.items.forEach(function (it) { rs += '<td style="' + th + '">' + E(short(it)) + '</td>'; });
+          rs += '<td style="' + th + '">Total</td></tr>';
+          [['On hand', g.have, ''], ['Minimum', g.par, ''], ['To order', g.falta, 'background:' + AMBBG + ';color:' + AMB + ';']].forEach(function (row) {
+            rs += '<tr><td style="' + td + 'text-align:left;font-weight:bold;' + row[2] + '">' + row[0] + '</td>';
+            row[1].forEach(function (v) { rs += '<td style="' + td + 'font-weight:bold;' + row[2] + '">' + n(v) + '</td>'; });
+            rs += '<td style="' + td + 'font-weight:bold;' + row[2] + '">' + n(sum(row[1])) + '</td></tr>';
+          });
+          h += rs + '</table><div style="font-size:' + (fs - 1.5) + 'px;color:' + MUTED + ';margin:2px 2px 0;">Totals include only counted units with bedroom/bathroom info.</div>';
+        }
+
+        R.bOrder.sort(function (a, b) { return bldSortKey(R.b[a].name).localeCompare(bldSortKey(R.b[b].name), undefined, { numeric: true, sensitivity: 'base' }); });
+        R.bOrder.forEach(function (bk) {
+          var B = R.b[bk];
+          B.rows.sort(function (x, y) { return coll.compare(x.unit, y.unit); });
+          B.missing.sort(function (x, y) { return coll.compare(x.unit, y.unit); });
+          var bg = agg(B.rows.concat(B.missing)), bOrder = sum(bg.falta);
+          var t = '<table style="width:100%;border-collapse:collapse;margin-top:10px;page-break-inside:avoid;">' +
+            '<tr><td colspan="' + ncols + '" style="padding:4px 6px;background:' + INK + ';color:#fff;font-size:' + (fs + 1.5) + 'px;font-weight:bold;">' + E(B.name) +
+            '<span style="font-weight:normal;font-size:' + fs + 'px;color:#C8D3DC;"> · ' + bg.units + ' unit' + (bg.units === 1 ? '' : 's') +
+            (B.missing.length ? ' · ' + B.missing.length + ' not counted yet' : '') + '</span>' +
+            (hasPar && bOrder ? '<span style="float:right;font-size:' + fs + 'px;color:#FFD08A;">To order: ' + n(bOrder) + ' pcs</span>' : '') + '</td></tr>';
+          if (B.rows.length) {
+            t += '<tr><td style="' + th + 'text-align:left;">Unit</td><td style="' + th + '">Bd/Ba</td><td style="' + th + '">Counted</td>';
+            r.items.forEach(function (it) { t += '<td style="' + th + '">' + E(short(it)) + '</td>'; });
+            t += '<td style="' + th + '">On hand</td>' + (hasPar ? '<td style="' + th + '">To order</td>' : '') + (isSup ? '<td style="' + th + 'text-align:left;">To order</td>' : '') + '</tr>';
+            B.rows.forEach(function (u) {
+              var bdba = (u.camasTxt || u.banosTxt) ? (u.camasTxt || '-') + ' / ' + (u.banosTxt || '-') : '-';
+              t += '<tr><td style="' + td + 'text-align:left;font-weight:bold;white-space:nowrap;">' + E(u.locker ? 'Storage' : u.unit) +
+                ((mixed || (u.sizes && u.sizes.length)) ? '<div style="font-size:' + (fs - 1.8) + 'px;color:' + MUTED + ';font-weight:normal;">' +
+                  E([mixed ? u.client : '', (u.sizes || []).join(' + ')].filter(String).join(' · ')) + '</div>' : '') + '</td>' +
+                '<td style="' + td + 'color:' + MUTED + ';white-space:nowrap;">' + E(bdba) + '</td>' +
+                '<td style="' + td + 'white-space:nowrap;color:' + MUTED + ';">' + E(String(u.fecha || '').slice(5)) + '</td>';
+              u.have.forEach(function (v, i) {
+                var f = u.falta ? u.falta[i] : null;
+                var style = f ? 'background:' + REDBG + ';color:' + RED + ';font-weight:bold;' : (v === 0 && !u.par ? 'background:' + REDBG + ';color:' + RED + ';font-weight:bold;' : '');
+                t += '<td style="' + td + style + '">' + n(v) + (f ? '<div style="font-size:' + (fs - 2) + 'px;color:' + AMB + ';font-weight:bold;">+' + n(f) + '</div>' : '') + '</td>';
+              });
+              t += '<td style="' + td + 'font-weight:bold;">' + n(sum(u.have)) + '</td>' +
+                (hasPar ? '<td style="' + td + 'font-weight:bold;color:' + (u.totalFalta ? AMB : GRN) + ';">' + (u.falta ? (u.totalFalta ? n(u.totalFalta) : 'OK') : '-') + '</td>' : '') +
+                (isSup ? '<td style="' + td + 'text-align:left;font-size:' + (fs - 1) + 'px;color:' + AMB + ';">' + E((u.pedir || []).join(', ')) + '</td>' : '') + '</tr>';
+            });
+            if (hasPar && bOrder) {
+              t += '<tr><td colspan="3" style="' + td + 'text-align:left;font-weight:bold;background:' + AMBBG + ';color:' + AMB + ';">Building — to order</td>';
+              bg.falta.forEach(function (v) { t += '<td style="' + td + 'font-weight:bold;background:' + AMBBG + ';color:' + AMB + ';">' + (v ? n(v) : '') + '</td>'; });
+              t += '<td style="' + td + 'background:' + AMBBG + ';"></td><td style="' + td + 'font-weight:bold;background:' + AMBBG + ';color:' + AMB + ';">' + n(bOrder) + '</td>' +
+                (isSup ? '<td style="' + td + 'background:' + AMBBG + ';"></td>' : '') + '</tr>';
+            }
+          }
+          if (B.missing.length) {
+            t += '<tr><td colspan="' + ncols + '" style="' + td + 'text-align:left;color:' + MUTED + ';">Not counted yet: ' +
+              E(B.missing.map(function (u) { return (u.locker ? 'Storage' : u.unit) + (mixed ? ' (' + u.client + ')' : ''); }).join(' · ')) + '</td></tr>';
+          }
+          h += t + '</table>';
+        });
+      });
+
+      var legend = 'Counts come from the most recent inventory of each unit (all bed sizes combined). ';
+      if (hasPar) {
+        legend += 'Minimum per bed = what is on the bed + one change for the next turnover: ' +
+          Object.keys(r.par.reglasCama).map(function (k) { return r.par.reglasCama[k] + ' ' + short(k); }).join(', ') +
+          '; plus ' + Object.keys(r.par.reglasBano).map(function (k) { return r.par.reglasBano[k] + ' ' + short(k); }).join(', ') +
+          ' per full bathroom (no change). Bd/Ba = bedrooms / bathrooms ("1+1" = bedroom + den, counted as 2 beds). ' +
+          'Red cells are below the minimum; the orange number is the quantity to order. ';
+      } else {
+        legend += 'Cells in red are items at zero. ';
+      }
+      legend += 'Legend: ' + r.items.map(function (it) { return short(it) + ' = ' + it; }).join(' · ') + '.';
+      h += '<div style="font-size:7.2px;color:' + MUTED + ';margin-top:12px;line-height:1.5;">' + E(legend) + '</div>' +
+        '<table style="width:100%;border-collapse:collapse;margin-top:8px;border-top:1px solid ' + LINE + ';"><tr>' +
+        '<td style="padding-top:5px;font-size:8px;color:' + MUTED + ';"><b style="color:' + INK + ';">Prepared by Clean My BnB</b></td>' +
+        '<td style="padding-top:5px;font-size:8px;color:' + MUTED + ';text-align:right;">' + E(r.generado) + '</td></tr></table></div>';
+      return h;
+    }
+
+    // Un solo diseño para pantalla, impresión y PDF (estilos en línea para que el PDF de Google los respete)
+    function repBuild(r, screen) {
+      var L = invL(), R = REP_TXT[L], E = invEsc;
+      var INK = '#0B1B2B', MUTED = '#6B7A89', LINE = '#E6EDF1', SOFT = '#F4F8FA', BRAND = '#A6FDFF', TEAL = '#0A8F95';
+      var RED = '#B42318', REDBG = '#FDECEC', GRN = '#15803D', GRNBG = '#EAF8EF', AMB = '#B45309', AMBBG = '#FFF6E5';
+      var fs = screen ? 11 : (r.items.length > 10 ? 7 : 8);
+      var padc = screen ? '5px 6px' : '4px 3px';
+      function short(k) { return REP_SHORT[k] ? REP_SHORT[k][L] : k; }
+      function n(v) { return (v === null || v === undefined) ? '-' : String(Math.round(v * 100) / 100); }
+      function dchip(d) {
+        if (d === null || d === undefined || d === 0) return '';
+        return '<span style="font-size:' + (fs - 2) + 'px;font-weight:bold;color:' + (d < 0 ? RED : GRN) + ';margin-left:2px;">' + (d > 0 ? '+' : '') + n(d) + '</span>';
+      }
+      var th = 'padding:' + padc + ';background:' + SOFT + ';font-size:' + (fs - 1) + 'px;font-weight:bold;color:' + MUTED + ';text-transform:uppercase;letter-spacing:0.2px;border-bottom:1px solid ' + LINE + ';' + (screen ? 'white-space:nowrap;' : '');
+      var td = 'padding:' + padc + ';border-bottom:1px solid ' + LINE + ';font-size:' + fs + 'px;color:' + INK + ';';
+      function title(t, sub) {
+        return '<div style="margin-top:20px;padding:8px 10px;background:' + SOFT + ';border-left:4px solid ' + BRAND + ';font-weight:bold;font-size:' + (fs + 3) + 'px;color:' + INK + ';">' + E(t) + '</div>' +
+          (sub ? '<div style="font-size:' + (fs - 1) + 'px;color:' + MUTED + ';margin:4px 2px 0;">' + E(sub) + '</div>' : '');
+      }
+      function wrap(table) { return screen ? '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">' + table + '</div>' : table; }
+      function tile(label, value, bg, color) {
+        return '<td style="background:' + bg + ';border-radius:8px;padding:8px 10px;vertical-align:top;">' +
+          '<div style="font-size:' + (fs - 2) + 'px;color:' + MUTED + ';font-weight:bold;letter-spacing:0.5px;text-transform:uppercase;">' + E(label) + '</div>' +
+          '<div style="font-size:' + (fs + 6) + 'px;font-weight:bold;color:' + color + ';margin-top:2px;">' + E(value) + '</div></td>';
+      }
+      var S = r.resumen, gap = '<td style="width:6px;"></td>';
+
+      var h = '<div style="font-family:Helvetica,Arial,sans-serif;color:' + INK + ';">' +
+        '<div style="height:5px;background:' + BRAND + ';border-radius:5px;"></div>' +
+        '<table style="width:100%;border-collapse:collapse;margin-top:12px;"><tr>' +
+        '<td style="vertical-align:middle;"><img src="' + INV_LOGO + '" alt="Clean My BnB" style="max-height:' + (screen ? 40 : 46) + 'px;max-width:170px;"></td>' +
+        '<td style="vertical-align:middle;text-align:right;">' +
+        '<div style="font-size:' + (fs - 1) + 'px;font-weight:bold;letter-spacing:1.2px;color:' + TEAL + ';">' + E(R.kickers[r.tipo] || R.kickers.linen) + '</div>' +
+        '<div style="font-size:' + (fs + 7) + 'px;font-weight:bold;margin-top:2px;">' + E(r.filtro) + '</div>' +
+        '<div style="font-size:' + (fs - 1) + 'px;color:' + MUTED + ';margin-top:2px;">' + E(R.area) + ': ' + E(r.side || R.both) + ' · ' + E(R.generated) + ' ' + E(r.generado) + '</div>' +
+        '</td></tr></table>';
+
+      if (!S.units) return h + '<p style="margin-top:20px;color:' + MUTED + ';font-size:' + (fs + 2) + 'px;">' + E(invT().repNoData) + '</p></div>';
+
+      h += '<table style="width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;"><tr>' +
+        tile(R.units, String(S.units), SOFT, INK) + gap +
+        tile(R.counted, String(S.contadas), GRNBG, GRN) + gap +
+        tile(R.missing, String(S.sin), S.sin ? REDBG : GRNBG, S.sin ? RED : GRN) + gap +
+        tile(R.coverage, S.cobertura + '%', S.cobertura < 80 ? AMBBG : GRNBG, S.cobertura < 80 ? AMB : GRN) +
+        '</tr></table><table style="width:100%;border-collapse:separate;border-spacing:0;margin-top:6px;"><tr>' +
+        tile(R.pieces, n(S.piezas), SOFT, INK) + gap +
+        tile(R.losses, n(S.bajas), S.bajas ? REDBG : GRNBG, S.bajas ? RED : GRN) + gap +
+        tile(R.old, String(S.viejas), S.viejas ? AMBBG : GRNBG, S.viejas ? AMB : GRN) +
+        '</tr></table>';
+      var isSup = r.tipo === 'supplies';
+      if (isSup) {
+        h += '<table style="width:100%;border-collapse:separate;border-spacing:0;margin-top:6px;"><tr>' +
+          tile(R.itemsToOrder, String(S.pedir), S.pedir ? AMBBG : GRNBG, S.pedir ? AMB : GRN) + gap +
+          tile(R.unitsAsking, String(S.unidadesPedir), S.unidadesPedir ? AMBBG : GRNBG, S.unidadesPedir ? AMB : GRN) + gap +
+          tile(R.checkNo, String(S.check), S.check ? REDBG : GRNBG, S.check ? RED : GRN) +
+          '</tr></table>';
+      }
+
+      // Totales generales
+      h += title(R.general);
+      var t1 = '<table style="width:100%;border-collapse:collapse;"><tr><td style="' + th + '">' + E(R.item) + '</td><td style="' + th + 'text-align:right;">' + E(R.total) + '</td><td style="' + th + 'text-align:right;">' + E(R.change) + '</td><td style="' + th + 'text-align:right;">' + E(R.atZero) + '</td></tr>';
+      r.items.forEach(function (it, i) {
+        var c = S.cambio[i];
+        t1 += '<tr><td style="' + td + '">' + E(nameOf(it)) + '</td><td style="' + td + 'text-align:right;font-weight:bold;">' + n(S.totals[i]) + '</td>' +
+          '<td style="' + td + 'text-align:right;font-weight:bold;color:' + (c < 0 ? RED : c > 0 ? GRN : MUTED) + ';">' + (c === null ? '-' : (c > 0 ? '+' : '') + n(c)) + '</td>' +
+          '<td style="' + td + 'text-align:right;font-weight:bold;color:' + (S.enCero[i] ? RED : MUTED) + ';">' + S.enCero[i] + '</td></tr>';
+      });
+      h += wrap(t1 + '</table>');
+
+      // Supplies: por pedir y checklist en NO
+      function listaUnidades(arr, titulo, hint, vacio, colName, color) {
+        var o = title(titulo + ' (' + arr.length + ')', hint);
+        if (!arr.length) return o + '<div style="font-size:' + fs + 'px;color:' + GRN + ';margin:6px 2px;">' + E(vacio) + '</div>';
+        var t = '<table style="width:100%;border-collapse:collapse;"><tr><td style="' + th + '">' + E(colName) + '</td><td style="' + th + 'text-align:center;">' + E(R.units) + '</td><td style="' + th + '">' + E(R.where) + '</td></tr>';
+        arr.forEach(function (x) {
+          t += '<tr><td style="' + td + 'font-weight:bold;white-space:nowrap;vertical-align:top;">' + E(nameOf(x.item)) + '</td>' +
+            '<td style="' + td + 'text-align:center;font-weight:bold;color:' + color + ';vertical-align:top;">' + x.units.length + '</td>' +
+            '<td style="' + td + 'color:' + MUTED + ';line-height:1.6;">' + E(x.units.map(function (u) { return u.unit + ' (' + u.client + ')'; }).join(' · ')) + '</td></tr>';
+        });
+        return o + wrap(t + '</table>');
+      }
+      if (isSup) {
+        h += listaUnidades(r.porPedir, R.toOrder, R.toOrderHint, R.orderNone, R.item, AMB);
+        h += listaUnidades(r.checklistNo, R.checkNo, R.checkHint, R.checkNone, R.point, RED);
+      }
+
+      // Por cliente
+      h += title(R.byClient);
+      var t2 = '<table style="width:100%;border-collapse:collapse;"><tr><td style="' + th + '">' + E(R.client) + '</td>' +
+        '<td style="' + th + 'text-align:center;">' + E(R.units) + '</td><td style="' + th + 'text-align:center;">✔</td><td style="' + th + 'text-align:center;">✖</td>' +
+        '<td style="' + th + 'text-align:center;">' + E(R.lastCount) + '</td>';
+      r.items.forEach(function (it) { t2 += '<td style="' + th + 'text-align:center;">' + E(short(it)) + '</td>'; });
+      t2 += '<td style="' + th + 'text-align:center;">' + E(R.totalPcs) + '</td><td style="' + th + 'text-align:center;">' + E(R.drops) + '</td>' +
+        (isSup ? '<td style="' + th + 'text-align:center;">' + E(R.order) + '</td><td style="' + th + 'text-align:center;">' + E(R.chk) + '</td>' : '') + '</tr>';
+      r.perClient.forEach(function (c) {
+        t2 += '<tr><td style="' + td + 'font-weight:bold;">' + E(c.client) + '</td>' +
+          '<td style="' + td + 'text-align:center;">' + c.units + '</td>' +
+          '<td style="' + td + 'text-align:center;color:' + GRN + ';font-weight:bold;">' + c.contadas + '</td>' +
+          '<td style="' + td + 'text-align:center;color:' + (c.sin ? RED : MUTED) + ';font-weight:bold;">' + c.sin + '</td>' +
+          '<td style="' + td + 'text-align:center;white-space:nowrap;">' + E(c.ultima || '-') + '</td>';
+        c.totals.forEach(function (v) { t2 += '<td style="' + td + 'text-align:center;">' + (c.contadas ? n(v) : '-') + '</td>'; });
+        t2 += '<td style="' + td + 'text-align:center;font-weight:bold;">' + (c.contadas ? n(c.total) : '-') + '</td>' +
+          '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (c.bajas ? RED : MUTED) + ';">' + n(c.bajas) + '</td>' +
+          (isSup ? '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (c.pedir ? AMB : MUTED) + ';">' + c.pedir + '</td>' +
+            '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (c.check ? RED : MUTED) + ';">' + c.check + '</td>' : '') + '</tr>';
+      });
+      h += wrap(t2 + '</table>');
+
+      // Por edificio
+      if (r.perBuilding && r.perBuilding.length) {
+        h += title(R.byBuilding);
+        var tb = '<table style="width:100%;border-collapse:collapse;"><tr><td style="' + th + '">' + E(R.bld) + '</td>' +
+          '<td style="' + th + 'text-align:center;">' + E(R.units) + '</td><td style="' + th + 'text-align:center;">✔</td><td style="' + th + 'text-align:center;">✖</td>';
+        r.items.forEach(function (it) { tb += '<td style="' + th + 'text-align:center;">' + E(short(it)) + '</td>'; });
+        tb += '<td style="' + th + 'text-align:center;">' + E(R.totalPcs) + '</td><td style="' + th + 'text-align:center;">' + E(R.drops) + '</td>' +
+          (isSup ? '<td style="' + th + 'text-align:center;">' + E(R.order) + '</td><td style="' + th + 'text-align:center;">' + E(R.chk) + '</td>' : '') + '</tr>';
+        r.perBuilding.forEach(function (B) {
+          tb += '<tr><td style="' + td + 'font-weight:bold;white-space:nowrap;">' + E(B.building) +
+            '<div style="font-size:' + (fs - 2) + 'px;color:' + MUTED + ';font-weight:normal;">' + E(B.clients.join(', ')) + '</div></td>' +
+            '<td style="' + td + 'text-align:center;">' + B.units + '</td>' +
+            '<td style="' + td + 'text-align:center;color:' + GRN + ';font-weight:bold;">' + B.contadas + '</td>' +
+            '<td style="' + td + 'text-align:center;color:' + (B.sin ? RED : MUTED) + ';font-weight:bold;">' + B.sin + '</td>';
+          B.totals.forEach(function (v) { tb += '<td style="' + td + 'text-align:center;">' + (B.contadas ? n(v) : '-') + '</td>'; });
+          tb += '<td style="' + td + 'text-align:center;font-weight:bold;">' + (B.contadas ? n(B.total) : '-') + '</td>' +
+            '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (B.bajas ? RED : MUTED) + ';">' + n(B.bajas) + '</td>' +
+            (isSup ? '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (B.pedir ? AMB : MUTED) + ';">' + B.pedir + '</td>' +
+              '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (B.check ? RED : MUTED) + ';">' + B.check + '</td>' : '') + '</tr>';
+        });
+        h += wrap(tb + '</table>');
+      }
+
+      // Por unidad
+      if (r.perUnit.length) {
+        h += title(R.byUnit, r.porCama ? R.byUnitHint : R.byUnitHint2);
+        var t3 = '<table style="width:100%;border-collapse:collapse;"><tr>' +
+          '<td style="' + th + '">' + E(R.bld) + ' · ' + E(R.unit) + '</td>' + (r.porCama ? '<td style="' + th + '">' + E(R.bed) + '</td>' : '') +
+          '<td style="' + th + '">' + E(R.date) + '</td><td style="' + th + 'text-align:center;">' + E(R.days) + '</td>';
+        r.items.forEach(function (it) { t3 += '<td style="' + th + 'text-align:center;">' + E(short(it)) + '</td>'; });
+        t3 += '<td style="' + th + 'text-align:center;">' + E(R.totalPcs) + '</td><td style="' + th + 'text-align:center;">' + E(R.delta) + '</td>' +
+          (isSup ? '<td style="' + th + 'text-align:center;">' + E(R.order) + '</td><td style="' + th + 'text-align:center;">' + E(R.chk) + '</td>' : '') + '</tr>';
+        var lastClient = null, ncols = 5 + (r.porCama ? 1 : 0) + (isSup ? 2 : 0) + r.items.length;
+        r.perUnit.forEach(function (u) {
+          if (u.client !== lastClient) {
+            lastClient = u.client;
+            t3 += '<tr><td colspan="' + ncols + '" style="padding:8px 6px 4px;font-size:' + fs + 'px;font-weight:bold;color:' + TEAL + ';border-bottom:1px solid ' + LINE + ';">' + E(u.client) + '</td></tr>';
+          }
+          var name = u.building + ' · ' + (u.locker ? '🔒 ' + R.locker : u.unit);
+          var link = String(u.pdf).indexOf('http') === 0 ? '<a href="' + E(u.pdf) + '" target="_blank" style="color:' + INK + ';text-decoration:none;">' + E(name) + '</a>' : E(name);
+          t3 += '<tr><td style="' + td + 'white-space:nowrap;">' + link + '<div style="font-size:' + (fs - 2) + 'px;color:' + MUTED + ';">' + E(u.cleaner) + (u.side ? ' · ' + E(u.side) : '') + (u.otros ? ' · ' + E(R.others) + ': ' + E(u.otros) : '') + '</div>' +
+            (u.pedir && u.pedir.length ? '<div style="font-size:' + (fs - 2) + 'px;color:' + AMB + ';font-weight:bold;">' + E(R.order) + ': ' + E(u.pedir.map(nameOf).join(', ')) + '</div>' : '') +
+            (u.check && u.check.length ? '<div style="font-size:' + (fs - 2) + 'px;color:' + RED + ';font-weight:bold;">' + E(R.chk) + ': ' + E(u.check.map(nameOf).join(', ')) + '</div>' : '') + '</td>' +
+            (r.porCama ? '<td style="' + td + '">' + E(u.size || '-') + '</td>' : '') +
+            '<td style="' + td + 'white-space:nowrap;">' + E(u.fecha) + '</td>' +
+            '<td style="' + td + 'text-align:center;color:' + (u.dias > 30 ? AMB : MUTED) + ';font-weight:' + (u.dias > 30 ? 'bold' : 'normal') + ';">' + u.dias + '</td>';
+          u.vals.forEach(function (v, i) {
+            var zero = v === 0;
+            t3 += '<td style="' + td + 'text-align:center;white-space:nowrap;' + (zero ? 'background:' + REDBG + ';color:' + RED + ';font-weight:bold;' : '') + '">' + n(v) + dchip(u.diffs[i]) + '</td>';
+          });
+          t3 += '<td style="' + td + 'text-align:center;font-weight:bold;">' + n(u.total) + '</td>' +
+            '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (u.totalDiff < 0 ? RED : u.totalDiff > 0 ? GRN : MUTED) + ';" title="' + E(u.prevFecha ? u.prevFecha : R.firstNote) + '">' +
+            (u.totalDiff === null ? '-' : (u.totalDiff > 0 ? '+' : '') + n(u.totalDiff)) + '</td>' +
+            (isSup ? '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (u.pedir.length ? AMB : MUTED) + ';" title="' + E(u.pedir.join(', ')) + '">' + u.pedir.length + '</td>' +
+              '<td style="' + td + 'text-align:center;font-weight:bold;color:' + (u.check.length ? RED : MUTED) + ';" title="' + E(u.check.join(', ')) + '">' + u.check.length + '</td>' : '') + '</tr>';
+        });
+        h += wrap(t3 + '</table>');
+      }
+
+      // Sin inventario
+      h += title(R.noInv + ' (' + r.sinInventario.length + ')');
+      if (!r.sinInventario.length) {
+        h += '<div style="font-size:' + fs + 'px;color:' + GRN + ';margin:6px 2px;">' + E(R.noInvNone) + '</div>';
+      } else {
+        var byC = {}, orderC = [];
+        r.sinInventario.forEach(function (u) { if (!byC[u.client]) { byC[u.client] = []; orderC.push(u.client); } byC[u.client].push(u); });
+        var t4 = '<table style="width:100%;border-collapse:collapse;">';
+        orderC.forEach(function (c) {
+          var list = byC[c].map(function (u) { return u.building + ' ' + (u.locker ? '(' + R.locker + ')' : u.unit); });
+          t4 += '<tr><td style="' + td + 'font-weight:bold;vertical-align:top;white-space:nowrap;width:1%;">' + E(c) + ' <span style="color:' + MUTED + ';font-weight:normal;">(' + list.length + ')</span></td>' +
+            '<td style="' + td + 'color:' + MUTED + ';line-height:1.6;">' + E(list.join(' · ')) + '</td></tr>';
+        });
+        h += t4 + '</table>';
+      }
+
+      h += '<table style="width:100%;border-collapse:collapse;margin-top:18px;border-top:1px solid ' + LINE + ';"><tr>' +
+        '<td style="padding-top:8px;font-size:' + (fs - 1) + 'px;color:' + MUTED + ';"><b style="color:' + INK + ';">Clean My BnB</b> · ' + E(R.kickers[r.tipo] || '') + '</td>' +
+        '<td style="padding-top:8px;font-size:' + (fs - 1) + 'px;color:' + MUTED + ';text-align:right;">' + E(r.generado) + '</td></tr></table></div>';
+      return h;
+    }
+
+    // ==========================================
+    // ARRANQUE
+    // ==========================================
+    (function boot() {
+      if (BOOT.hub) document.getElementById('lnk-hub').style.display = 'inline-block';
+      try { var saved = localStorage.getItem(LISTS_KEY); if (saved) staffData = JSON.parse(saved); } catch (e) {}
+      if (currentSide) setSide(currentSide);
+      else { document.getElementById('view-side').style.display = 'block'; applyLang(); }
+      loadLists(false);
+    })();
+  </script>
+</body>
+</html>
