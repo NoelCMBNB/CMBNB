@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body { font-family: Arial, sans-serif; margin: 28px; color:#111; }
+      .top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+      .brand { font-size:18px; font-weight:800; }
+      .meta { text-align:right; font-size:12px; color:#444; line-height:1.4; }
+      h1 { font-size:20px; margin:16px 0 10px; }
+      .box { border:1px solid #e2e2e2; border-radius:12px; padding:14px; margin-top:12px; }
+      .row { display:flex; gap:14px; margin-bottom:10px; }
+      .col { flex:1; }
+      .label { font-size:12px; color:#555; margin-bottom:4px; }
+      .value { font-size:14px; font-weight:700; }
+      .hr { height:1px; background:#eee; margin:12px 0; }
+      table { width:100%; border-collapse:collapse; margin-top:8px; }
+      th, td { border:1px solid #e6e6e6; padding:8px; font-size:12.5px; vertical-align:top; }
+      th { background:#f5f6fb; text-align:left; }
+      .muted { color:#666; font-size:12px; }
+      .sectionTitle { font-size:14px; font-weight:800; margin:14px 0 6px; }
+      .moneyGrid { display:flex; gap:12px; margin-top:10px; }
+      .moneyBox { flex:1; border:1px solid #e6e6e6; border-radius:12px; padding:10px; }
+      .moneyVal { font-size:16px; font-weight:900; }
+    </style>
+  </head>
+
+  <body>
+    <div class="top">
+      <div class="brand">CLEAN MY BNB — Daily Report</div>
+      <div class="meta">
+        Generated: <?= data.generatedAt ?><br />
+        Report ID: <?= data.reportId ?>
+      </div>
+    </div>
+
+    <h1>Daily Cleaning Report</h1>
+
+    <div class="box">
+      <div class="row">
+        <div class="col">
+          <div class="label">Report Date</div>
+          <div class="value"><?= data.reportDate ?></div>
+        </div>
+        <div class="col">
+          <div class="label">Created by:</div>
+          <div class="value"><?= data.reportCreatedBy ?></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="label">Schedule Responsible</div>
+          <div class="value"><?= data.scheduleResponsible ?></div>
+        </div>
+        <div class="col">
+          <div class="label">Double-check Responsible</div>
+          <div class="value"><?= data.doubleCheckResponsible ?></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="label">Cleanings Completed</div>
+          <div class="value"><?= data.cleaningsCompleted ?></div>
+        </div>
+        <div class="col">
+          <div class="label">Cleanings On Time</div>
+          <div class="value"><?= data.cleaningsOnTime ?></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sectionTitle">Cleanings delayed</div>
+      <? if (!data.delayedItems || data.delayedItems.length === 0) { ?>
+        <div class="muted">— No delayed cleanings reported.</div>
+      <? } else { ?>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%;">Unit</th>
+              <th style="width:14%;">Delay (min)</th>
+              <th style="width:22%;">Impacted to guests?</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <? data.delayedItems.forEach(function(item){ ?>
+              <tr>
+                <td><?= item.unit ?></td>
+                <td><?= item.delayMinutes ?></td>
+                <td><?= item.impactedToGuests ?></td>
+                <td><?= item.reason ?></td>
+              </tr>
+            <? }); ?>
+          </tbody>
+        </table>
+      <? } ?>
+
+      <div class="sectionTitle">Cleanings missed</div>
+      <? if (!data.missedItems || data.missedItems.length === 0) { ?>
+        <div class="muted">— No missed cleanings reported.</div>
+      <? } else { ?>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30%;">Unit</th>
+              <th style="width:25%;">Impacted to guests?</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <? data.missedItems.forEach(function(item){ ?>
+              <tr>
+                <td><?= item.unit ?></td>
+                <td><?= item.impactedToGuests ?></td>
+                <td><?= item.reason ?></td>
+              </tr>
+            <? }); ?>
+          </tbody>
+        </table>
+      <? } ?>
+
+      <div class="hr"></div>
+
+      <div class="sectionTitle">Financial Summary</div>
+      <div class="moneyGrid">
+        <div class="moneyBox">
+          <div class="label">Total Sales</div>
+          <div class="moneyVal">$<?= (Number(data.totalSales) || 0).toFixed(2) ?></div>
+        </div>
+        <div class="moneyBox">
+          <div class="label">Labor Cost</div>
+          <div class="moneyVal">$<?= (Number(data.laborCost) || 0).toFixed(2) ?></div>
+        </div>
+      </div>
+
+      <div class="moneyGrid">
+        <div class="moneyBox">
+          <div class="label">Total Gross</div>
+          <div class="moneyVal">$<?= (Number(data.gross) || 0).toFixed(2) ?></div>
+        </div>
+        <div class="moneyBox">
+          <div class="label">Gross Percentage</div>
+          <div class="moneyVal"><?= (Number(data.grossPercent) || 0).toFixed(2) ?>%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="muted" style="margin-top:14px;">
+      This PDF was generated automatically by the Daily Reports Web App.
+    </div>
+  </body>
+</html>
